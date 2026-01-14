@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 
-export default function Button({children,href,className = "",variant}) {
+export default function Button({children,link,className = "",variant}) {
 
 
     const baseStyles = "px-6 py-3 md:px-7 font-semibold text-md md:text-lg  xl:text-xl rounded-[10px]  "
@@ -12,10 +12,10 @@ export default function Button({children,href,className = "",variant}) {
 
     const combinedClassName = `${baseStyles} ${variants[variant]  || variants.primary} ${className}`;
 
-    if (href) {
+    if (link) {
         return (
 
-            <Link className={combinedClassName}>{children}</Link>
+            <Link href={link} className={combinedClassName}>{children}</Link>
         )
 
     }
