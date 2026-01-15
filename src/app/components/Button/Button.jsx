@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 
-export default function Button({children,link,className = "",variant}) {
+export default function Button({children,link,className = "",variant,type}) {
 
 
     const baseStyles = "px-6 py-3 md:px-7 font-semibold text-md md:text-lg  xl:text-xl rounded-[10px]  "
@@ -15,13 +15,13 @@ export default function Button({children,link,className = "",variant}) {
     if (link) {
         return (
 
-            <Link href={link} className={combinedClassName}>{children}</Link>
+            <Link  href={link} className={combinedClassName}>{children}</Link>
         )
 
     }
     
     return(
-        <button className={combinedClassName}>{children}</button>
+        <button type={type} className={combinedClassName}>{children}</button>
     )
 
 }
