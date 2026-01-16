@@ -1,4 +1,4 @@
-import CardLogin from "../components/CardLogin/CardLogin"
+import AuthCard from "../components/AuthCard/AuthCard"
 
 export default function page() {
 
@@ -13,7 +13,7 @@ export default function page() {
 
         </section>
         <section className="">
-            <CardLogin/>
+            <AuthCard mode={"login"}/>
 
 
             

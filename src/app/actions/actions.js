@@ -2,6 +2,32 @@
 import { createSupabaseClient } from "@/app/auth/server";
 
 
+export async function addUsername(username) {
+    try {
+            const supabase  = await createSupabaseClient();
+            const {error} = await supabase
+            .from("users_data")
+            .insert([
+            { username: username , //trasformo in stringa json
+               
+            }])
+            console.log(error)
+
+
+        if (error) {
+            return {errorMessage: error}
+        }        
+        
+
+    }
+    catch(err) {
+        console.log(err);
+        
+    }
+    
+}
+
+
 export  async function signUp (user) { 
        try {
 
