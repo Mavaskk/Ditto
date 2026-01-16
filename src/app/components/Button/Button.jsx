@@ -1,13 +1,13 @@
 import Link from "next/link";
 
 
-export default function Button({children,link,className = "",variant,type}) {
+export default function Button({children,link,className = "",variant,type,disabled}) {
 
 
     const baseStyles = "px-6 py-3 md:px-7 font-semibold text-md md:text-lg  xl:text-xl rounded-[10px]  "
 
     const variants = {
-        primary : "text-[#ECFDB9] bg-[#375D06] hover:bg-[#284404]"
+        primary : "text-[#ECFDB9] bg-[#375D06] hover:bg-[#284404] disabled:"
     }
 
     const combinedClassName = `${baseStyles} ${variants[variant]  || variants.primary} ${className}`;
@@ -21,7 +21,7 @@ export default function Button({children,link,className = "",variant,type}) {
     }
     
     return(
-        <button type={type} className={combinedClassName}>{children}</button>
+        <button disabled={disabled} type={type} className={combinedClassName}>{children}</button>
     )
 
 }

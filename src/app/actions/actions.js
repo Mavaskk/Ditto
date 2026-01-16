@@ -30,10 +30,13 @@ export  async function logIn (user) {
 
             const supabase  = await createSupabaseClient();
 
-            const {error} = await supabase.auth.signInWithPassword({
+            const {error,data} = await supabase.auth.signInWithPassword({
                         email: user.email,
                         password: user.password,
                     })
+
+             console.log(data);
+                    
 
             if (error) {
                 
