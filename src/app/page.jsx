@@ -13,7 +13,7 @@ export default function Home() {
         <p className="text-gray-500 text-center text-sm md:text-xl mt-5 px-4">
           Skip the endless group chat. Let AI privately negotiate conflicting budgets and schedules.
         </p>
-        <Button link={"/login"} className="mt-10 lg:mt-16" variant="primary">Start a new trip</Button>
+        <Button link={"/signup?action=create"} className="mt-10 lg:mt-16" variant="primary">Start a new trip</Button> 
       </section>
 
       {/* --- CAROUSEL / MARQUEE SECTION --- */}

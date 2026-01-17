@@ -14,7 +14,9 @@ export default function AuthCard({mode}) {
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"; //recupero il path dell'utente prima del login cosi o lo riporto li  o in dashboard
+    const action = searchParams.get("action") ; //se url contiene params action vuol dire che deve creare il travel perchè arriva da landing
+    const redirectPath = action === "create" ? "/dashboard/createTravel" : "/dashboard";
+
 
     const [error,SetError] = useState(false)
 
@@ -35,7 +37,7 @@ export default function AuthCard({mode}) {
                 
             }
             else{
-                router.push(callbackUrl);
+                router.push(redirectPath);
                 router.refresh(); // Spesso utile in Next.js per aggiornare i Server Components; // Reindirizza l'utente dove voleva andare originariamente
 
             }
@@ -50,13 +52,8 @@ export default function AuthCard({mode}) {
                 
             }
             else{
-                const {errorMessage: err} = await addUsername(data.username)
-                if (err) {
-                   
-                }                    router.push(callbackUrl);
-
-
-
+                await addUsername(data.username)                
+                router.push(redirectPath);
             }
 
         }
