@@ -14,7 +14,7 @@ export default  function Page () {
                 <p className="text-gray-500 mb-10 text-center text-sm md:text-xl mt-5 px-4">
                     Give your trip a name to set the vibe. You’ll get a magic link to invite your friends immediately after.
                 </p>
-                <CreateTravelCard/>
+                <CreateTravelCard />
 
 
 

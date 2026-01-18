@@ -26,10 +26,11 @@ export async function addUsername(username) {
     }
     
 }
+
 export async function createTravel(data) {
     try {
             const supabase  = await createSupabaseClient();
-            const {error} = await supabase
+            const {data:newTravel, error} = await supabase
             .from("travels")
             .insert([
             { name: data.name ,
@@ -39,14 +40,13 @@ export async function createTravel(data) {
 
                
             }])
-            console.log(error)
-            console.log(data)
-
+            .select("uuid") // <--- Chiedi a Supabase di restituirti uuid appena creato
+            .single();    // <--- Dici a Supabase che ti aspetti un solo oggetto
 
         if (error) {
             return {errorMessage: error}
         }       
-        return { errorMessage: null, success: true }; 
+        return { errorMessage: null, travelUuid: newTravel.uuid }; 
         
 
     }
@@ -107,6 +107,32 @@ export  async function logIn (user) {
        }
  
 }
+
+export async function selectTravel(param) {
+        try {
+            const supabase  = await createSupabaseClient();
+            const {data:newTravel, error} = await supabase
+            .from("travels")
+            .select()
+            .eq('uuid', param)
+            .single()
+
+        if (error) {
+            return {errorMessage: error}
+        }       
+        return { errorMessage: null, newTravel }; 
+        
+
+    }
+    catch(err) {
+        
+    }
+    
+}
+
+
+    
+
 
 export async function signOut() {
        try {

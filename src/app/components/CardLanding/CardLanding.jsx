@@ -80,7 +80,7 @@ export default function CardLanding({size }) {
                 </div>
                 </div>
 
-                <p className={`text-center text-sm font-medium ${styles.text}`}>
+                <p className={`text-center text-md font-medium ${styles.text}`}>
                 {card.description}
                 </p>
             </div>
@@ -107,6 +107,7 @@ export default function CardLanding({size }) {
                     flex-shrink-0 
                     md:w-[280px] md:h-[320px]
                     lg:w-[320px] lg:h-[400px] 
+                    xl:w-[400px]
                     rounded-3xl p-10 
                     flex flex-col items-center justify-between 
                     ${styles.wrapper}
@@ -130,7 +131,7 @@ export default function CardLanding({size }) {
                 </div>
                 </div>
 
-                <p className={`text-center md:text-sm lg:text-md font-medium ${styles.text}`}>
+                <p className={`text-center md:text-sm lg:text-lg font-medium ${styles.text}`}>
                 {card.description}
                 </p>
             </div>

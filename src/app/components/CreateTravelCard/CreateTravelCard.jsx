@@ -6,10 +6,13 @@ import { useForm } from "react-hook-form"
 import { useState } from "react"
 import Button from "../Button/Button"
 import NumberInput from "../NumberInput/NumberInput"
+import { useRouter } from 'next/navigation'
+
 import { createTravel } from "@/app/actions/actions"
 
 export default function CreateTravelCard() {
-
+            const router = useRouter();
+        
         const [error,SetError] = useState(false)
     
         const {
@@ -21,12 +24,14 @@ export default function CreateTravelCard() {
         } = useForm();
 
         const onSubmit = async (data) => {
-            const result = await createTravel(data);
+            const {result,travelUuid} = await createTravel(data);
 
             if (result && result.errorMessage) {
                 console.log("Errore:", result.errorMessage);
             } else {
-                console.log("Successo!");
+                console.log(travelUuid);
+                router.push(`createTravel/confirm/${travelUuid}`)
+
             }
             
         }
@@ -36,7 +41,7 @@ export default function CreateTravelCard() {
             <form className="flex flex-col gap-5"  onSubmit={handleSubmit(onSubmit)}>
                     <Input type={"text"} required={true} suggestion={"Give your trip a memorable name"}  name={"name"} register={register} error={errors.name} label={"Trip name"} placeholder={"e.g.,Summer 2026"}/>
                     <div className="mt-5">
-                        <label className="text-[#375D06]  ">Number of travelers</label>
+                        <label className="text-[#375D06] md:text-lg ">Number of travelers</label>
 
                         <div className="flex flex-row justify-center mt-3">
                             <NumberInput setValue={setValue} watch={watch} placeholder={0}  required={true}  name={"number_of_travelers"} register={register} error={errors.name} label={"Trip name"}  />

@@ -10,7 +10,7 @@ export default function Card({children,className}) {
 
 
     return(
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center md:w-120 lg:w-150 md:py-16">
 
             <div className={combinedClassName}>
 
