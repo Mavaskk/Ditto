@@ -8,7 +8,7 @@ export async function addUsername(username) {
             const {error} = await supabase
             .from("users_data")
             .insert([
-            { username: username , //trasformo in stringa json
+            { username: username , 
                
             }])
             console.log(error)
@@ -17,6 +17,36 @@ export async function addUsername(username) {
         if (error) {
             return {errorMessage: error}
         }        
+        
+
+    }
+    catch(err) {
+        console.log(err);
+        
+    }
+    
+}
+export async function createTravel(data) {
+    try {
+            const supabase  = await createSupabaseClient();
+            const {error} = await supabase
+            .from("travels")
+            .insert([
+            { name: data.name ,
+              number_of_travelers: data.number_of_travelers,
+              status: "created"
+
+
+               
+            }])
+            console.log(error)
+            console.log(data)
+
+
+        if (error) {
+            return {errorMessage: error}
+        }       
+        return { errorMessage: null, success: true }; 
         
 
     }

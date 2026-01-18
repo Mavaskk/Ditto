@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import { useState } from "react"
 import Button from "../Button/Button"
 import NumberInput from "../NumberInput/NumberInput"
+import { createTravel } from "@/app/actions/actions"
 
 export default function CreateTravelCard() {
 
@@ -19,9 +20,14 @@ export default function CreateTravelCard() {
             formState: { errors }
         } = useForm();
 
-        const onSubmit = (data) => {
-            //mando dati
-            console.log(data);
+        const onSubmit = async (data) => {
+            const result = await createTravel(data);
+
+            if (result && result.errorMessage) {
+                console.log("Errore:", result.errorMessage);
+            } else {
+                console.log("Successo!");
+            }
             
         }
 
