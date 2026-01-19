@@ -1,6 +1,7 @@
 import { Lora, Lato } from "next/font/google";
 import "./globals.css";
-import 'flowbite';
+import { Toaster } from "react-hot-toast";
+
 
 
 // Configurazione Font come da tuo codice
@@ -57,6 +58,8 @@ export default function RootLayout({ children }) {
             opacity-60
           "></div>
         </div>
+          <Toaster position="top-center"/> 
+
 
         {children}
       </body>

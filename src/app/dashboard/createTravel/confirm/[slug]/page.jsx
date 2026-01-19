@@ -1,7 +1,7 @@
 'use client'
 import { use, useEffect, useState } from 'react'
 import { selectTravel } from '@/app/actions/actions'
-import Card from '@/app/components/Card/Card'
+import ConfimCard from '@/app/components/ConfirmCard/ConfirmCard'
 
 export default function Page ({ params }) {
 
@@ -16,6 +16,8 @@ export default function Page ({ params }) {
 				
 			}
 			setTravel(newTravel)
+		
+			
 			
 
 		}
@@ -25,16 +27,22 @@ export default function Page ({ params }) {
 
 
 	},[slug])
+
+	useEffect(() => {
+		console.log(travel);
+		
+
+	},[travel])
 	
 
   
   return (
-		<Card> 
 
-			<div>My uuid: {slug}</div>
-			<div>{travel.name}</div>
+		<div className="flex mx-10 flex-col justify-center items-center pt-20 pb-20">	
+			<ConfimCard confirmData={true} travelName = {travel.name} numberTravelers={travel.number_of_travelers} uuid ={travel.uuid}></ConfimCard>
+		</div>
 
-		</Card>
+
 	
 	)
 

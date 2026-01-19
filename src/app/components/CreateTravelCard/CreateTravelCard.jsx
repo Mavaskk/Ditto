@@ -37,7 +37,7 @@ export default function CreateTravelCard() {
         }
 
     return(
-        <Card className={" w-full  md:w-120 lg:w-150 md:py-16"}>
+        <Card className=" w-full  md:w-120 lg:w-150 md:py-16">
             <form className="flex flex-col gap-5"  onSubmit={handleSubmit(onSubmit)}>
                     <Input type={"text"} required={true} suggestion={"Give your trip a memorable name"}  name={"name"} register={register} error={errors.name} label={"Trip name"} placeholder={"e.g.,Summer 2026"}/>
                     <div className="mt-5">
