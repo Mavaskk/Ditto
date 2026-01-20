@@ -16,11 +16,9 @@ export default function Page ({ params }) {
 				
 			}
 			setTravel(newTravel)
-		
-			
-			
-
 		}
+
+
 
 		fetchTravel()
 

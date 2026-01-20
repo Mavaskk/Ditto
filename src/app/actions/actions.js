@@ -108,6 +108,32 @@ export  async function logIn (user) {
  
 }
 
+export async function getUserName(uuid) {
+    try {
+            const supabase  = await createSupabaseClient();
+            const {error,data} = await supabase
+            .from("users_data")
+            .eq('uuid', uuid)
+            .single()
+            console.log(error)
+
+
+        if (error) {
+            return {errorMessage: error,}
+        }        
+        console.log(data);
+        
+        return {errorMessage : null,userName}
+        
+
+    }
+    catch(err) {
+        console.log(err);
+        
+    }
+    
+}
+
 export async function selectTravel(param) {
         try {
             const supabase  = await createSupabaseClient();
@@ -131,7 +157,6 @@ export async function selectTravel(param) {
 }
 
 
-    
 
 
 export async function signOut() {

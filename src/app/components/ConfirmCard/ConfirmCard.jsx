@@ -5,6 +5,10 @@ import toast from "react-hot-toast";
 
 export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid}) {
 
+    const link = `http://localhost:3000/joinTravel/${uuid}`
+    const copylink = () => {
+        navigator.clipboard.writeText(link)
+    }
 
 
     console.log(confirmData);
@@ -29,7 +33,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             <div className="mt-20 flex flex-col items-center gap-2">
                                 <p className="px-5 text-center py-2 rounded-xl border text-gray-500 border-black/[0.13]">{uuid}</p>
                                 <p className="text-gray-500 md:text-md">or</p>
-                                <Button onClick={() => toast("Link copiato")} type={"button"} style={"primary"}>Copy link</Button>
+                                <Button onClick={(e) => {toast("Link copiato"),copylink()}} type={"button"} style={"primary"}>Copy link</Button>
 
 
 
