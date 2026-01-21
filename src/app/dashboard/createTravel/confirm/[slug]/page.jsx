@@ -36,7 +36,7 @@ export default function Page ({ params }) {
   
   return (
 
-		<div className="flex mx-10 flex-col justify-center items-center pt-20 pb-20">	
+		<div className="flex mx-10 flex-col justify-center items-center pt-20 ">	
 			<ConfimCard confirmData={true} travelName = {travel.name} numberTravelers={travel.number_of_travelers} uuid ={travel.uuid}></ConfimCard>
 		</div>
 

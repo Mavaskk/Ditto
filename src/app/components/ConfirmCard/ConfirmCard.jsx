@@ -22,11 +22,11 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                 <p className="text-gray-500 mb-10 text-center text-sm md:text-xl mt-2 px-4">Your infromation has been recieved</p>
                 { confirmData ? (
                         <div className="mt-25 flex flex-col gap-3">
-                            <div className="flex justify-between">                           
+                            <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Trip name</p>
                                 <p className="text-lg md:text-2xl lg:text-3xl">{travelName}</p>
                             </div>
-                            <div className="flex justify-between">                           
+                            <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Number of travelers</p>
                                 <p className="text-lg md:text-2xl lg:text-3xl">{numberTravelers}</p>
                             </div>

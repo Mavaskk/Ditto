@@ -2,8 +2,9 @@
 
 import { use, useEffect, useState } from "react"
 import Image from "next/image"
-import { selectTravel, getUserName } from "@/app/actions/actions"
-import image from "../../../assets/joinTravel.svg"
+import { selectTravel, getUsername } from "@/app/actions/actions"
+import joinTravel from "../../../assets/joinTravel.svg"
+import Button from "@/app/components/Button/Button"
 
 
 export default function Page ({params}) {
@@ -11,28 +12,27 @@ export default function Page ({params}) {
     const {slug} = use(params)
 
     const [travel,setTravel] = useState({})
+    const [username,setUsername] = useState({})
 
     useEffect(() => {
+        //aggiungere controllo se i partecipanti sono gia completi rispetto al numero inserito in travels
 
         const fetchData = async () => {
             const {errorMessage,newTravel} = await selectTravel(slug)
-            console.log(newTravel);
-            const x = await getUserName(newTravel.user_id)
-            console.log(errorMessage,x);
+            if (errorMessage) {
+                console.log(errorMessage);
+                
+            }
             setTravel(newTravel)            
-        }
-
-        const getUserName = async () => {
-
-            
-
-
-
-
+            const {error,username} = await getUsername(newTravel.user_id)
+            if (error) {
+                console.log(error);
+                
+            }
+            setUsername(username)
         }
 
         fetchData()
-        getUserName()
 
 
 
@@ -41,14 +41,21 @@ export default function Page ({params}) {
 
 
     return (
-        <div>
-        <h1>Welcome in <span></span>{travel.name}</h1>
-        <p>You have been inveted by </p>
-
-        <Image alt="travelPerson" fill src={"../../src/assets/joinTravel.svg"}></Image>
-
-
+        <section className="flex mx-10 flex-col justify-center items-center pt-20 ">
+        <h1 className="text-4xl   text-balance font-semibold md:text-6xl xl:text-8xl text-center">Welcome in <br /> <span className="font-normal">{travel.name}</span></h1>
+        <p className="text-gray-500 text-center text-sm md:text-xl mt-5 px-4">You have been inveted by {username.username} </p>
+        <div className="mt-20">
+            <Image alt="travelPerson" className="w-45"  src={joinTravel}></Image>
+           
         </div>
+        <div className="flex flex-col items-center mt-15 gap-2">
+            <Button link={`/joinTravel/${slug}/quiz`} variant={"primary"}>Join the group</Button>
+            <Button link={`/login`} variant={"secondary"}>Login to dashboard</Button>
+            
+        </div>
+
+
+        </section >
 
 
     )

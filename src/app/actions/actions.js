@@ -108,22 +108,23 @@ export  async function logIn (user) {
  
 }
 
-export async function getUserName(uuid) {
+export async function getUsername(uuid) {
     try {
             const supabase  = await createSupabaseClient();
             const {error,data} = await supabase
             .from("users_data")
-            .eq('uuid', uuid)
+            .select()
+            .eq('user_id', uuid)
             .single()
             console.log(error)
 
 
         if (error) {
-            return {errorMessage: error,}
+            return {error: error}
         }        
         console.log(data);
         
-        return {errorMessage : null,userName}
+        return {error : null,username : data}
         
 
     }
