@@ -2,10 +2,12 @@
 
 import Card from "../Card/Card"
 import Button from "../Button/Button"
-import { useForm } from "react-hook-form"
+import { useForm, Controller } from "react-hook-form"
 import Input from "../Input/Input"
 import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
+import Chip from "../Chip/Chip";
+import TabNav from "../TabBar/TabNav"
 
     const PrettoSlider = styled(Slider)({
     color: '#375D06',
@@ -55,8 +57,15 @@ export default function CreateTravelProfileCard() {
             handleSubmit,
             setValue, 
             watch,
+            control,
             formState: { errors }
-        } = useForm();
+        } = useForm({
+            defaultValues: {
+                destination : "",
+                slider : 500,
+                vibe : []
+            }
+        });
 
     const onSubmit = async (data) => {
         console.log(data);
@@ -75,23 +84,87 @@ export default function CreateTravelProfileCard() {
                 <div>
                     <p>1. Your personal budget</p>
                     <div className="relative">
-                            <PrettoSlider min={200} max={1500} defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
+                              <Controller //serve per passare useForm a componenti esterni non nativi
+                                control={control}
+                                name="slider"
+                                render={({ field: { onChange, onBlur, value, ref } }) => (
+                                <PrettoSlider onChange={onChange}
+                                                onBlur={onBlur}
+                                                selected={value} 
+                                                min={200} max={1500}  defaultValue={50} 
+                                                aria-label="Default" 
+                                                valueLabelDisplay="auto" />
+      
+                                )}
+                            />
+
+                        
+                    
 
 
                         <p className="absolute top-8 md:top-6">200</p>
                         <p className="absolute right-0 top-8 md:top-6">1500</p>
                     
                     </div>
-
-                    {/* Slider */}
                 </div>
                 <div>
-                    <p>2. The vibe</p>
-                    {/* Slider */}
+                <p>2. The vibe (Selezione multipla)</p>
+                    <div className="mt-2 flex gap-2">
+                        <Controller
+                        name="vibe"
+                        control={control}
+                        defaultValue={[]} // Inizializza sempre come array vuoto
+                        rules={{ 
+                            validate: (value) => value.length > 0 || "Seleziona almeno una vibe" 
+                        }}
+                        render={({ field }) => (
+                            
+                            <div className="flex gap-2 flex-wrap">
+                            {["Party", "Culture", "Relax", "Trekking", "On the road", "Mountain", "Sea"].map((label) => {
+                                
+                                const isSelected = field.value?.includes(label);  // Controlla se la label è presente nell'array
+
+
+                                const handleToggle = () => {
+                                const currentValues = field.value || [];
+                                const nextValues = isSelected
+                                    ? currentValues.filter((v) => v !== label) // Rimuovi se c'è
+                                    : [...currentValues, label]; // Aggiungi se non c'è
+                                
+                                field.onChange(nextValues); //per scatenare re-render e aggiornare interfaccia
+                                };
+
+                                return (
+                                <Chip
+                                    key={label}
+                                    label={label}
+                                    selected={isSelected}
+                                    onClick={handleToggle}
+                                />
+                                );
+                            })}
+                            </div>
+                        )}
+                        />
+                    </div>
+                    {errors.vibe && (
+                        <p className="text-red-500 text-xs mt-1">{errors.vibe.message}</p>
+                    )}
                 </div>
                 <div>
                     <p>3. Your pace</p>
-                    {/* Slider */}
+                    <Controller
+                    name="travelPace" // Il nome del campo nel tuo form
+                    control={control}
+                    defaultValue="2" // ID del tab selezionato di default
+                    render={({ field }) => (
+                        <TabNav 
+                        liTab={[{name : "Chill",id : "1"},{name : "Balance",id : "2"},{name : "Active",id : "3"}]} 
+                        value={field.value} // Passiamo il valore del form alla tab
+                        onChange={field.onChange} // Passiamo la funzione per aggiornare il form
+                        />
+                    )}
+                    />                
                 </div>
                 <div className="flex justify-center">
                                 <Button >I&rsquo;m ready!</Button>

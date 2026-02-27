@@ -1,0 +1,44 @@
+.active {
+    color: white;
+}
+    /* background-color: #FFA500;
+    border-radius: 1.0rem;
+    color: white;
+    transition: background-color 0.6s ease-in 0.9s ; 
+    transition: color 0.3s ease-out ; 
+    transition: color 0.3s ease-out ; 
+
+ */
+
+
+.tabSize {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    padding-top:0.4rem;
+    padding-bottom:0.4rem;
+
+}
+
+@media (min-width: 768px) {
+}
+
+/* Large (lg): ≥992px */
+@media (min-width: 992px) {
+}
+
+/* Extra large (xl): ≥1200px */
+@media (min-width: 1200px) {
+
+.tabSize {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+    padding-top:0.6rem;
+    padding-bottom:0.6rem;
+
+}
+
+}
+
+/* Extra extra large (xxl): ≥1400px */
+@media (min-width: 1400px) {
+}

@@ -2,6 +2,8 @@ import CreateTravelCard from "@/app/components/CreateTravelCard/CreateTravelCard
 
 export default  function Page () {
 
+    
+
 
     
 
@@ -16,7 +18,7 @@ export default  function Page () {
                 </p>
                 <CreateTravelCard />
 
-
+            div
 
 
               </section>
