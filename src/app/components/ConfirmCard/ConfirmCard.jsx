@@ -58,11 +58,11 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             </div>
                             <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Vibe</p>
-                                <p className="text-lg md:text-2xl lg:text-3xl">{vibe}</p>
-                            </div>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{vibe.map((item) => (item + ","))}</p>
+                            </div>,
                           <div className="mt-20 flex flex-col items-center gap-2">
                           
-                                <Button> Back to home</Button>
+                                <Button link={"/dashboard"}> See your Travel</Button>
 
 
 

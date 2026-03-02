@@ -53,18 +53,24 @@ export default function AuthCard({mode}) {
             }
             else{
                 await addUsername(data.username)          
-                //controllo se contiene le preferenze, se si lo mando alla dashboard
                 const checkStorage = localStorage.getItem("travelPrefences");
-                console.log(checkStorage);
                 
                 if (checkStorage) {
+                    const travelUuid = searchParams.get("TravelId") 
                     console.log("Local storage trovato")
-                    router.push("(dashboard")
                     
-                    //mando al db con le preferenze
-                }
+                    //mando al db con le preferenze e poi pulisci
 
-                router.push(redirectPath);
+                    
+                    return router.push(`/joinTravel/${travelUuid}/confirm`)
+
+
+                }
+                
+                return router.push(redirectPath);
+
+                
+
             }
 
         }

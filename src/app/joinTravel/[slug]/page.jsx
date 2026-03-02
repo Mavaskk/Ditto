@@ -13,11 +13,14 @@ export default function Page ({params}) {
 
     const [travel,setTravel] = useState({})
     const [username,setUsername] = useState({})
+    const [isLoading,setIsLoading] = useState(true)
 
     useEffect(() => {
         //aggiungere controllo se i partecipanti sono gia completi rispetto al numero inserito in travels
 
         const fetchData = async () => {
+            console.log(slug);
+            
             const {errorMessage,newTravel} = await selectTravel(slug)
             if (errorMessage) {
                 console.log(errorMessage);
@@ -30,9 +33,11 @@ export default function Page ({params}) {
                 
             }
             setUsername(username)
+            setIsLoading(false)
         }
 
         fetchData()
+
 
 
 
@@ -41,6 +46,7 @@ export default function Page ({params}) {
 
 
     return (
+        isLoading ? <p>Caricamento</p> : 
         <section className="flex mx-10 flex-col justify-center items-center pt-20 ">
         <h1 className="text-4xl   text-balance font-semibold md:text-6xl xl:text-8xl text-center">Welcome in <br /> <span className="font-normal">{travel.name}</span></h1>
         <p className="text-gray-500 text-center text-sm md:text-xl mt-5 px-4">You have been inveted by {username.username} </p>

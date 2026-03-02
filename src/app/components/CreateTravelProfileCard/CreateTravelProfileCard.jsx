@@ -64,7 +64,7 @@ export default function CreateTravelProfileCard() {
     
     const params = useParams()
     const uuid = params.slug //Estraggo uuid da link
-    console.log(params);
+
     
     
     const {
