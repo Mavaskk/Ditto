@@ -3,7 +3,7 @@ import Button from "../Button/Button";
 import toast from "react-hot-toast";
 
 
-export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid}) {
+export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = []}) {
 
     const link = `http://localhost:3000/joinTravel/${uuid}`
     const copylink = () => {
@@ -11,7 +11,6 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
     }
 
 
-    console.log(confirmData);
     
 
     return (
@@ -20,7 +19,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
             <div>
                 <h2 className="text-4xl   text-balance font-semibold md:text-6xl  text-center">Thank you</h2>
                 <p className="text-gray-500 mb-10 text-center text-sm md:text-xl mt-2 px-4">Your infromation has been recieved</p>
-                { confirmData ? (
+                { confirmData === "createTravel" ? (
                         <div className="mt-25 flex flex-col gap-3">
                             <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Trip name</p>
@@ -44,9 +43,32 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                 )
                 :
                 (
-                    <div>
-                        s
-                    </div>
+                        <div className="mt-25 flex flex-col gap-3">
+                            <div className="flex justify-between md:px-5">                           
+                                <p className="text-gray-500 md:text-lg">Destination</p>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{destination}</p>
+                            </div>
+                            <div className="flex justify-between md:px-5">                           
+                                <p className="text-gray-500 md:text-lg">Budget</p>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{budget}</p>
+                            </div>
+                            <div className="flex justify-between md:px-5">                           
+                                <p className="text-gray-500 md:text-lg">Travel Pace</p>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{travelPace}</p>
+                            </div>
+                            <div className="flex justify-between md:px-5">                           
+                                <p className="text-gray-500 md:text-lg">Vibe</p>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{vibe}</p>
+                            </div>
+                          <div className="mt-20 flex flex-col items-center gap-2">
+                          
+                                <Button> Back to home</Button>
+
+
+
+                            </div>                            
+                            
+                        </div>
 
 
                 )}

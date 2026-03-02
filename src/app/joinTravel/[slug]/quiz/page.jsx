@@ -1,7 +1,10 @@
+
 import CreateTravelProfileCard from "@/app/components/CreateTravelProfileCard/CreateTravelProfileCard"
 
-export default function page () {
 
+export default function page ({ params }) {
+
+    
 
 
     return (

@@ -15,6 +15,7 @@ export default function Chip({ label, selected = false, onClick, variant = "outl
 
   return (
     <button
+    type="button"
       onClick={onClick}
       className={`${baseStyles} ${variants[variant]}`}
       aria-pressed={selected}

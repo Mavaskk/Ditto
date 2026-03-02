@@ -18,7 +18,6 @@ export default  function Page () {
                 </p>
                 <CreateTravelCard />
 
-            div
 
 
               </section>

@@ -8,6 +8,10 @@ import Slider from '@mui/material/Slider';
 import { styled } from '@mui/material/styles';
 import Chip from "../Chip/Chip";
 import TabNav from "../TabBar/TabNav"
+import { useUserStore } from "@/store/useUserStore"
+import { useRouter, useParams } from 'next/navigation'
+
+
 
     const PrettoSlider = styled(Slider)({
     color: '#375D06',
@@ -51,35 +55,56 @@ import TabNav from "../TabBar/TabNav"
 
 
 export default function CreateTravelProfileCard() {
-       
+
+      
+    
+
+    const addPrefences = useUserStore((state) => state.updatePreferences) //state estrae direttamente la funzione che voglio senza usare {}
+    const router = useRouter()
+    
+    const params = useParams()
+    const uuid = params.slug //Estraggo uuid da link
+    console.log(params);
+    
+    
     const {
             register,
             handleSubmit,
-            setValue, 
-            watch,
             control,
             formState: { errors }
         } = useForm({
             defaultValues: {
                 destination : "",
                 slider : 500,
-                vibe : []
+                vibe : [],
             }
         });
 
     const onSubmit = async (data) => {
-        console.log(data);
         
-              
+        const paces = ["Chill", "Balance", "Active"] // travelPace è indice e devo convertirlo a stringa
+        const formattedData = {
+            ...data,
+            travel_pace : paces[data.travelPace - 1],
+
+        }
+
+        addPrefences(formattedData)
+
+        const checkStatus = localStorage.getItem("travelPrefences")
+        if (checkStatus) {
+            router.push(`/signup/?TravelId=${uuid}`)
+
+            
+        }
+       
     }
-
-
 
 
     return (
         <Card className=" w-full  md:w-120 lg:w-150 md:py-16">
             <form className="flex flex-col gap-5 "  onSubmit={handleSubmit(onSubmit)}>
-                <Input register={register} type={"text"} required={true} name={"destination"} error={errors.name} label={"Destination"} placeholder={"e.g. Mountain"} />
+                <Input register={register} type={"text"} required={true} name={"destination"} error={errors.name} label={"Destination"} placeholder={"e.g. New York"} />
 
                 <div>
                     <p>1. Your personal budget</p>
@@ -91,7 +116,7 @@ export default function CreateTravelProfileCard() {
                                 <PrettoSlider onChange={onChange}
                                                 onBlur={onBlur}
                                                 selected={value} 
-                                                min={200} max={1500}  defaultValue={50} 
+                                                min={200} max={1500}  defaultValue={750} 
                                                 aria-label="Default" 
                                                 valueLabelDisplay="auto" />
       
@@ -152,13 +177,14 @@ export default function CreateTravelProfileCard() {
                     )}
                 </div>
                 <div>
-                    <p>3. Your pace</p>
+                    <p className="mb-2">3. Your pace</p>
                     <Controller
                     name="travelPace" // Il nome del campo nel tuo form
                     control={control}
                     defaultValue="2" // ID del tab selezionato di default
                     render={({ field }) => (
                         <TabNav 
+                        className={""}
                         liTab={[{name : "Chill",id : "1"},{name : "Balance",id : "2"},{name : "Active",id : "3"}]} 
                         value={field.value} // Passiamo il valore del form alla tab
                         onChange={field.onChange} // Passiamo la funzione per aggiornare il form
@@ -166,7 +192,7 @@ export default function CreateTravelProfileCard() {
                     )}
                     />                
                 </div>
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-5">
                                 <Button >I&rsquo;m ready!</Button>
     
                 </div>

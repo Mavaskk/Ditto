@@ -52,7 +52,18 @@ export default function AuthCard({mode}) {
                 
             }
             else{
-                await addUsername(data.username)                
+                await addUsername(data.username)          
+                //controllo se contiene le preferenze, se si lo mando alla dashboard
+                const checkStorage = localStorage.getItem("travelPrefences");
+                console.log(checkStorage);
+                
+                if (checkStorage) {
+                    console.log("Local storage trovato")
+                    router.push("(dashboard")
+                    
+                    //mando al db con le preferenze
+                }
+
                 router.push(redirectPath);
             }
 
