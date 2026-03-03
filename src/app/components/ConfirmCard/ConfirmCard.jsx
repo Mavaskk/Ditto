@@ -3,6 +3,8 @@ import Button from "../Button/Button";
 import { useUserStore } from "@/store/useUserStore"
 import toast from "react-hot-toast";
 import { createPreference } from "@/app/actions/actions";
+import { useRouter } from 'next/navigation'
+
 
 
 export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = []}) {
@@ -11,18 +13,25 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
     const copylink = () => {
         navigator.clipboard.writeText(link)
     }
+    const router = useRouter()
 
-
-        
+    const clearPreferences = useUserStore((state) => state.clearPreferences);        
 
     const postData = async () => {
        if (confirmData === "preferences") {
             const preferences = useUserStore.getState().travelPrefences;
-            //lo mando nella tabella preferences
-            console.log();
             
-            const {newPreference , error} = await createPreference()
-            console.log(newPreference);
+            //lo mando nella tabella preferences
+            
+            const {error} = await createPreference(preferences)
+            
+            if (error) {
+                throw Error("Errore nel salvare preferenze db", error)
+            }
+
+            clearPreferences()
+            useUserStore.persist.clearStorage(); //forzo e cancello direttamente la key nel localstorage
+            router.push("/dashboard")
             
             
 
@@ -82,7 +91,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             </div>,
                           <div className="mt-20 flex flex-col items-center gap-2">
                           
-                                <Button onClick={postData} > See your Travel</Button> link={"/dashboard"}
+                                <Button onClick={postData} > See your Travel dashboard</Button> 
 
 
 

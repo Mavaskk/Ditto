@@ -5,12 +5,11 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 //https://zustand.docs.pmnd.rs/reference/integrations/persisting-store-data
 
 
-export const useUserStore = create(
+export const useUserStore = create( //crea store persistente su localstorare
     persist(
         (set) => ({
-            travelPrefences : {
-            },
-            clearPreferences : () => set((state) => ({travelPrefences: {}})),
+            travelPrefences : {}, // lo setto vuoto all'inziio
+            clearPreferences : () => set( ({travelPrefences: {}})),
             updatePreferences : (newPreferences) => set((state) => ({travelPrefences : {...state.travelPrefences,...newPreferences}}) //per mergare con dati precedenti passo lo state passato
             
             

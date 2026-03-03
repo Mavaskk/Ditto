@@ -58,24 +58,33 @@ export async function createTravel(data) {
 }
 
 export async function createPreference(params) {
+    
     try {
             const supabase  = await createSupabaseClient();
-            const {data:newPreference, error} = await supabase
+            const {data, error} = await supabase
             .from("participants")
             .insert([
-            { name: data.name ,
-              number_of_travelers: data.number_of_travelers,
-              status: "created"
+            { travel_uuid: params.travel_uuid ,
+              destination: params.destination,
+              budget: params.slider,
+              travel_pace: params.travel_pace,
+              vibe: params.vibe,
+
 
 
                
             }])
             .single();    // <--- Dici a Supabase che ti aspetti un solo oggetto
 
+            
         if (error) {
-            return {errorMessage: error}
-        }       
-        return newPreference; 
+            return {data: null, error: err} 
+        }    
+
+        return {data,error}
+        
+         
+    
         
 
     }
