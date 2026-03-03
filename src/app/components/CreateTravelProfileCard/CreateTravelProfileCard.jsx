@@ -86,6 +86,7 @@ export default function CreateTravelProfileCard() {
         const formattedData = {
             ...data,
             travel_pace : paces[data.travelPace - 1],
+            travel_uuid: uuid
 
         }
 

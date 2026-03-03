@@ -57,6 +57,35 @@ export async function createTravel(data) {
     
 }
 
+export async function createPreference(params) {
+    try {
+            const supabase  = await createSupabaseClient();
+            const {data:newPreference, error} = await supabase
+            .from("participants")
+            .insert([
+            { name: data.name ,
+              number_of_travelers: data.number_of_travelers,
+              status: "created"
+
+
+               
+            }])
+            .single();    // <--- Dici a Supabase che ti aspetti un solo oggetto
+
+        if (error) {
+            return {errorMessage: error}
+        }       
+        return newPreference; 
+        
+
+    }
+    catch(err) {
+        console.log(err);
+        
+    }
+
+    
+}
 
 export  async function signUp (user) { 
        try {
@@ -136,17 +165,24 @@ export async function getUsername(uuid) {
 }
 
 export async function selectTravel(param) {
-        try {
+        try {       
+            console.log(param);
+                 
             const supabase  = await createSupabaseClient();
             const {data:newTravel, error} = await supabase
-            .from("travels")
+            .from("public_travel_info")
             .select()
-            .eq('uuid', param)
+            .eq('uuid', "04d2bd03-336f-4365-8dd8-db85fd406a5d")
             .single()
 
         if (error) {
+            console.log(error);
             return {errorMessage: error}
+            
+            
         }       
+        console.log("sdsa");
+        
         return { errorMessage: null, newTravel }; 
         
 

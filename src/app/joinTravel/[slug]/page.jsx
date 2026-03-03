@@ -26,7 +26,9 @@ export default function Page ({params}) {
                 console.log(errorMessage);
                 
             }
-            setTravel(newTravel)            
+            
+            setTravel(newTravel)
+                        
             const {error,username} = await getUsername(newTravel.user_id)
             if (error) {
                 console.log(error);

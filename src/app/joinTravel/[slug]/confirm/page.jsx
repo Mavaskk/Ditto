@@ -6,7 +6,6 @@ import { useUserStore } from "@/store/useUserStore"
 export default function Page () {
 
     const  travelPrefences = useUserStore(state => state.travelPrefences) 
-    console.log(travelPrefences);
     
 
 

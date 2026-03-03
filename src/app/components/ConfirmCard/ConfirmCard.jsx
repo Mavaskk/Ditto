@@ -1,6 +1,8 @@
 import Card from "../Card/Card"
 import Button from "../Button/Button";
+import { useUserStore } from "@/store/useUserStore"
 import toast from "react-hot-toast";
+import { createPreference } from "@/app/actions/actions";
 
 
 export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = []}) {
@@ -10,6 +12,24 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
         navigator.clipboard.writeText(link)
     }
 
+
+        
+
+    const postData = async () => {
+       if (confirmData === "preferences") {
+            const preferences = useUserStore.getState().travelPrefences;
+            //lo mando nella tabella preferences
+            console.log();
+            
+            const {newPreference , error} = await createPreference()
+            console.log(newPreference);
+            
+            
+
+
+       }
+
+    }
 
     
 
@@ -50,7 +70,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             </div>
                             <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Budget</p>
-                                <p className="text-lg md:text-2xl lg:text-3xl">{budget}</p>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{budget}€</p>
                             </div>
                             <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Travel Pace</p>
@@ -62,7 +82,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             </div>,
                           <div className="mt-20 flex flex-col items-center gap-2">
                           
-                                <Button link={"/dashboard"}> See your Travel</Button>
+                                <Button onClick={postData} > See your Travel</Button> link={"/dashboard"}
 
 
 
