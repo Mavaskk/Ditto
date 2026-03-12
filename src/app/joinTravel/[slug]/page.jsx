@@ -5,6 +5,7 @@ import Image from "next/image"
 import { selectTravel, getUsername } from "@/app/actions/actions"
 import joinTravel from "../../../assets/joinTravel.svg"
 import Button from "@/app/components/Button/Button"
+import { checkParticipantsNumber } from "@/app/actions/actions"
 
 
 export default function Page ({params}) {
@@ -16,10 +17,8 @@ export default function Page ({params}) {
     const [isLoading,setIsLoading] = useState(true)
 
     useEffect(() => {
-        //aggiungere controllo se i partecipanti sono gia completi rispetto al numero inserito in travels
 
         const fetchData = async () => {
-            console.log(slug);
             
             const {errorMessage,newTravel} = await selectTravel(slug)
             if (errorMessage) {
@@ -28,6 +27,19 @@ export default function Page ({params}) {
             }
             
             setTravel(newTravel)
+            //controllo nella tabella pubblica quanti partecipanti con quello uuid ci sono e quindi quanti partecipanti per ogni vacanza
+            const maxParticipants = newTravel.number_of_travelers
+            console.log(maxParticipants);
+
+            const {participants,err} = await checkParticipantsNumber(slug)
+            if (participants.length >= maxParticipants) {
+                //disattivo bottone e cambio pagina dicendo che viaggio è full
+                
+
+            }
+            
+            
+
                         
             const {error,username} = await getUsername(newTravel.user_id)
             if (error) {

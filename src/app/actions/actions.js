@@ -27,6 +27,35 @@ export async function addUsername(username) {
     
 }
 
+export async function checkParticipantsNumber(param) {
+
+    try {
+            const supabase  = await createSupabaseClient();
+            const {data : participants, error} = await supabase
+            .from("public_participants_info")
+            .select()
+            .eq('travel_uuid', param)
+            
+
+        if (error) {
+            console.log(error);
+            return {errorMessage: error}
+            
+            
+        }       
+        console.log(participants);
+        
+        return { errorMessage: null, participants }; 
+    }
+
+    catch (err) {
+        console.log(err);
+        
+        
+    }
+
+}
+
 export async function createTravel(data) {
     try {
             const supabase  = await createSupabaseClient();
@@ -191,7 +220,6 @@ export async function selectTravel(param) {
             
             
         }       
-        console.log("sdsa");
         
         return { errorMessage: null, newTravel }; 
         

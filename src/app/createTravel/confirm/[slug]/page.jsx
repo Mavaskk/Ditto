@@ -21,7 +21,6 @@ export default function Page ({ params }) {
 		}
 
 
-
 		fetchTravel()
 
 
@@ -34,7 +33,6 @@ export default function Page ({ params }) {
 
 	},[travel])
 	
-
   
   return (
 
