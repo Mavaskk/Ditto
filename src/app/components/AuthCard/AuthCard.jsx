@@ -15,7 +15,7 @@ export default function AuthCard({mode}) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const action = searchParams.get("action") ; //se url contiene params action vuol dire che deve creare il travel perchè arriva da landing
-    const redirectPath = action === "create" ? "/dashboard/createTravel" : "/dashboard";
+    const redirectPath = action === "create" ? "/createTravel" : "/dashboard";
 
 
     const [error,SetError] = useState(false)

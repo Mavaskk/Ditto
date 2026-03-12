@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 
 
 
-export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = []}) {
+export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = [],departureDate,returnDate}) {
 
     const link = `http://localhost:3000/joinTravel/${uuid}`
     const copylink = () => {
@@ -16,6 +16,16 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
     const router = useRouter()
 
     const clearPreferences = useUserStore((state) => state.clearPreferences);        
+
+    const getDate = (date) => {
+        if (date) {
+        const dateOnly = date.substring(0, 10);
+        return  dateOnly            
+        }
+
+
+
+    }
 
     const postData = async () => {
        if (confirmData === "preferences") {
@@ -88,7 +98,15 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Vibe</p>
                                 <p className="text-lg md:text-2xl lg:text-3xl">{vibe.map((item) => (item + ","))}</p>
-                            </div>,
+                            </div>
+                            <div className="flex justify-between md:px-5">                           
+                                <p className="text-gray-500 md:text-lg">Departure Date</p>
+                                <p className="text- md:text-2xl lg:text-3xl">{getDate(departureDate)}</p>
+                            </div>
+                            <div className="flex justify-between md:px-5">                           
+                                <p className="text-gray-500 md:text-lg">Return Date</p>
+                                <p className="text-lg md:text-2xl lg:text-3xl">{getDate(returnDate)}</p>
+                            </div>
                           <div className="mt-20 flex flex-col items-center gap-2">
                           
                                 <Button onClick={postData} > See your Travel dashboard</Button> 

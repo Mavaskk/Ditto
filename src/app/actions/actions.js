@@ -69,6 +69,8 @@ export async function createPreference(params) {
               budget: params.slider,
               travel_pace: params.travel_pace,
               vibe: params.vibe,
+              departure_date : params.departure_date,
+              return_date : params.return_date
 
 
 
@@ -175,13 +177,12 @@ export async function getUsername(uuid) {
 
 export async function selectTravel(param) {
         try {       
-            console.log(param);
                  
             const supabase  = await createSupabaseClient();
             const {data:newTravel, error} = await supabase
             .from("public_travel_info")
             .select()
-            .eq('uuid', "04d2bd03-336f-4365-8dd8-db85fd406a5d")
+            .eq('uuid', param)
             .single()
 
         if (error) {

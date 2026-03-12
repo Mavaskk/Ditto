@@ -10,7 +10,9 @@ export default function Page ({ params }) {
 
 	useEffect( () => {
 		const fetchTravel = async () => {
+
 			const {errorMessage,newTravel} = await selectTravel(slug)
+			
 			if (errorMessage) {
 				console.log(errorMessage);
 				

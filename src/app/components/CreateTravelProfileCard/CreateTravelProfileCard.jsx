@@ -128,12 +128,12 @@ export default function CreateTravelProfileCard() {
 
         addPrefences(formattedData)
 
-        // const checkStatus = localStorage.getItem("travelPrefences")
-        // if (checkStatus) {
-        //     router.push(`/signup/?TravelId=${uuid}`)
+        const checkStatus = localStorage.getItem("travelPrefences")
+        if (checkStatus) {
+            router.push(`/signup/?TravelId=${uuid}`)
 
             
-        // }
+        }
        
     }
 
@@ -263,6 +263,7 @@ export default function CreateTravelProfileCard() {
                                     <Calendar
                                         value={field.value}
                                         onChange={(e) => field.onChange(e.value)}
+                                        className="ps-2 py-1 rounded-md w-full focus:border-[#375D06] focus:ring-0 focus:outline-none border border-black/[0.13]"
                                         dateFormat="dd/mm/yy"
                                         minDate={departureDate || new Date()}
                                         placeholder="dd/mm/yy"
