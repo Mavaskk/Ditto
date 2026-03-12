@@ -17,6 +17,7 @@
     "flowbite": "^4.0.1",
     "motion": "^12.34.3",
     "next": "16.1.1",
+    "primereact": "^10.9.7",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.1",

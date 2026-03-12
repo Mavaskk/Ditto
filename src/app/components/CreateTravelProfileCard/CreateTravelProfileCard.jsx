@@ -11,6 +11,37 @@ import TabNav from "../TabBar/TabNav"
 import { useUserStore } from "@/store/useUserStore"
 import { useRouter, useParams } from 'next/navigation'
 
+import { Calendar } from 'primereact/calendar';
+
+const calendarPT = {
+    root: { className: 'w-full' },
+    input: { className: 'ps-2 py-1 rounded-md w-full focus:border-[#375D06] focus:ring-0 focus:outline-none border border-black/[0.13] text-sm' },
+    panel: { className: 'bg-white border border-black/[0.13] rounded-lg p-3 shadow-md z-50 min-w-[260px]' },
+    header: { className: 'flex items-center justify-between pb-2 mb-2 border-b border-black/[0.08]' },
+    previousButton: { className: 'text-[#375D06] hover:bg-[#375D06]/10 p-1 rounded cursor-pointer flex items-center justify-center border-none bg-transparent' },
+    nextButton: { className: 'text-[#375D06] hover:bg-[#375D06]/10 p-1 rounded cursor-pointer flex items-center justify-center border-none bg-transparent' },
+    title: { className: 'flex gap-1' },
+    monthTitle: { className: 'text-[#375D06] font-semibold text-sm cursor-pointer bg-transparent border-none hover:underline' },
+    yearTitle: { className: 'text-[#375D06] font-semibold text-sm cursor-pointer bg-transparent border-none hover:underline' },
+    table: { className: 'w-full border-collapse text-sm mt-1' },
+    tableHeader: { className: '' },
+    tableHeaderRow: { className: '' },
+    weekDay: { className: 'p-1 text-center text-xs text-gray-400 font-semibold pb-2' },
+    tableBody: { className: '' },
+    tableBodyRow: { className: '' },
+    day: { className: 'p-0.5 text-center' },
+    dayLabel: ({ context }) => ({
+        className: [
+            'flex items-center justify-center w-8 h-8 mx-auto rounded-full cursor-pointer text-sm transition-colors',
+            context.selected ? 'bg-[#375D06] text-white' : '',
+            context.today && !context.selected ? 'border border-[#375D06] text-[#375D06]' : '',
+            !context.selected && !context.today && !context.disabled ? 'hover:bg-[#375D06]/10 hover:text-[#375D06]' : '',
+            context.disabled ? 'text-gray-300 cursor-not-allowed pointer-events-none' : '',
+        ].filter(Boolean).join(' '),
+    }),
+}
+
+
 
 
     const PrettoSlider = styled(Slider)({
@@ -71,6 +102,7 @@ export default function CreateTravelProfileCard() {
             register,
             handleSubmit,
             control,
+            watch,
             formState: { errors }
         } = useForm({
             defaultValues: {
@@ -79,6 +111,8 @@ export default function CreateTravelProfileCard() {
                 vibe : [],
             }
         });
+
+    const departureDate = watch("departure_date")
 
     const onSubmit = async (data) => {
         
@@ -89,15 +123,17 @@ export default function CreateTravelProfileCard() {
             travel_uuid: uuid
 
         }
+        console.log(formattedData);
+        
 
         addPrefences(formattedData)
 
-        const checkStatus = localStorage.getItem("travelPrefences")
-        if (checkStatus) {
-            router.push(`/signup/?TravelId=${uuid}`)
+        // const checkStatus = localStorage.getItem("travelPrefences")
+        // if (checkStatus) {
+        //     router.push(`/signup/?TravelId=${uuid}`)
 
             
-        }
+        // }
        
     }
 
@@ -192,6 +228,52 @@ export default function CreateTravelProfileCard() {
                         />
                     )}
                     />                
+                </div>
+                <div>
+                    <p className="mb-2">4. Duration</p>
+                    <div className="flex gap-3">
+                        <div className="flex flex-col gap-1 flex-1">
+                            <label className="text-[#375D06] md:text-lg">Departure</label>
+                            <Controller
+                                name="departure_date"
+                                control={control}
+                                rules={{ required: "Select a departure date" }}
+                                render={({ field }) => (
+                                    <Calendar
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(e.value)}
+                                        dateFormat="dd/mm/yy"
+                                        minDate={new Date()}
+                                        className="ps-2 py-1 rounded-md w-full focus:border-[#375D06] focus:ring-0 focus:outline-none border border-black/[0.13]"
+                                        placeholder="dd/mm/yy"
+                                        pt={calendarPT}
+                                        unstyled
+                                    />
+                                )}
+                            />
+                            {errors.departure_date && <p className="text-red-500 text-xs mt-1">{errors.departure_date.message}</p>}
+                        </div>
+                        <div className="flex flex-col gap-1 flex-1">
+                            <label className="text-[#375D06] md:text-lg">Return</label>
+                            <Controller
+                                name="return_date"
+                                control={control}
+                                rules={{ required: "Select a return date" }}
+                                render={({ field }) => (
+                                    <Calendar
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(e.value)}
+                                        dateFormat="dd/mm/yy"
+                                        minDate={departureDate || new Date()}
+                                        placeholder="dd/mm/yy"
+                                        pt={calendarPT}
+                                        unstyled
+                                    />
+                                )}
+                            />
+                            {errors.return_date && <p className="text-red-500 text-xs mt-1">{errors.return_date.message}</p>}
+                        </div>
+                    </div>
                 </div>
                 <div className="flex justify-center mt-5">
                                 <Button >I&rsquo;m ready!</Button>
