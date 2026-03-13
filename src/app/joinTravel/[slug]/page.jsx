@@ -15,6 +15,7 @@ export default function Page ({params}) {
     const [travel,setTravel] = useState({})
     const [username,setUsername] = useState({})
     const [isLoading,setIsLoading] = useState(true)
+    const [travelFull,setTravelFull] = useState(false)
 
     useEffect(() => {
 
@@ -34,6 +35,7 @@ export default function Page ({params}) {
             const {participants,err} = await checkParticipantsNumber(slug)
             if (participants.length >= maxParticipants) {
                 //disattivo bottone e cambio pagina dicendo che viaggio è full
+                setTravelFull(travel)
                 
 
             }
@@ -68,11 +70,26 @@ export default function Page ({params}) {
             <Image alt="travelPerson" className="w-45"  src={joinTravel}></Image>
            
         </div>
+        {!travelFull ? (
+
         <div className="flex flex-col items-center mt-15 gap-2">
-            <Button link={`/joinTravel/${slug}/quiz`} variant={"primary"}>Join the group</Button>
+            <Button  link={`/joinTravel/${slug}/quiz`} variant={"primary"}>Join the group</Button>
             <Button link={`/login`} variant={"secondary"}>Login to dashboard</Button>
             
         </div>
+
+        ):
+        (
+
+        <div className="flex flex-col items-center mt-15 gap-2">
+            <p className="text-xl text-red-600">The travel is full contact the admin</p>
+            <Button  link={`/signup?action=create`} variant={"primary"}>Create new Travel</Button>
+            
+        </div>
+        )
+        
+        }
+
 
 
         </section >

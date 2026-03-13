@@ -18,20 +18,16 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
     const clearPreferences = useUserStore((state) => state.clearPreferences);        
 
     const getDate = (date) => {
-        if (date) {
-        const dateOnly = date.substring(0, 10);
-        return  dateOnly            
-        }
-
-
-
+        if (!date) return null
+        const d = date instanceof Date ? date : new Date(date)
+        return d.toLocaleDateString('en-GB') // dd/mm/yyyy
     }
 
     const postData = async () => {
        if (confirmData === "preferences") {
             const preferences = useUserStore.getState().travelPrefences;
             
-            //lo mando nella tabella preferences
+            //lo salvo nel db
             
             const {error} = await createPreference(preferences)
             
