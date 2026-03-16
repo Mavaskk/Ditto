@@ -1,6 +1,7 @@
 import { Lora, Lato } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import NavBar from "./components/NavBar/Navbar";
 
 
 
@@ -58,8 +59,8 @@ export default function RootLayout({ children }) {
             opacity-60
           "></div>
         </div>
-          <Toaster position="top-center"/> 
-
+          <Toaster position="top-center"/>
+          <NavBar />
 
         {children}
       </body>

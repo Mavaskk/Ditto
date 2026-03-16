@@ -87,44 +87,51 @@ export async function createTravel(data) {
 }
 
 export async function createPreference(params) {
-    
+
     try {
-            const supabase  = await createSupabaseClient();
+            const supabase = await createSupabaseClient();
+
+            // Recupero utente corrente
+            const { data: { user } } = await supabase.auth.getUser();
+
+            // Controllo se è l'organizzatore del viaggio
+            const { data: ownedTravel } = await supabase
+                .from("travels")
+                .select("uuid")
+                .eq("uuid", params.travel_uuid)
+                .eq("user_id", user.id)
+                .single();
+
+            const isOrganizer = !!ownedTravel;
+
             const {data, error} = await supabase
             .from("participants")
             .insert([
-            { travel_uuid: params.travel_uuid ,
+            { travel_uuid: params.travel_uuid,
+              user_id: user.id,
+              organizer: isOrganizer,
               destination: params.destination,
               budget: params.slider,
               travel_pace: params.travel_pace,
               vibe: params.vibe,
               departure_date : params.departure_date,
               return_date : params.return_date
-
-
-
-               
             }])
-            .single();    // <--- Dici a Supabase che ti aspetti un solo oggetto
+            .single();
 
-            
         if (error) {
-            return {data: null, error: err} 
-        }    
+            return {data: null, error}
+        }
 
-        return {data,error}
-        
-         
-    
-        
+        return {data, error: null}
 
     }
     catch(err) {
         console.log(err);
-        
+
     }
 
-    
+
 }
 
 export  async function signUp (user) { 
@@ -233,6 +240,30 @@ export async function selectTravel(param) {
 
 
 
+
+export async function getParticipantStatus(travelUuid) {
+    try {
+        const supabase = await createSupabaseClient();
+
+        const { data: { user } } = await supabase.auth.getUser();
+
+        const { data, error } = await supabase
+            .from("participants")
+            .select("user_id")
+            .eq("travel_uuid", travelUuid)
+            .eq("user_id", user.id)
+            .single();
+
+        if (error && error.code !== "PGRST116") { // PGRST116 = no rows found, non è un errore reale
+            return { hasPreferences: false, error }
+        }
+
+        return { hasPreferences: !!data, error: null }
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
 
 export async function signOut() {
        try {

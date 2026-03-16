@@ -42,7 +42,6 @@ export default function AuthCard({mode}) {
 
             }
 
-            console.log(data);
         }
         else {
             const {errorMessage} = await signUp(data)
