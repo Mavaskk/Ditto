@@ -2,20 +2,30 @@ import Card from "../Card/Card"
 import Button from "../Button/Button";
 import { useUserStore } from "@/store/useUserStore"
 import toast from "react-hot-toast";
-import { createPreference } from "@/app/actions/actions";
+import { createPreference, getParticipantStatus } from "@/app/actions/actions";
 import { useRouter } from 'next/navigation'
+import { useEffect,use, useState } from "react";
+import { usePathname } from "next/navigation"
+import { useParams } from 'next/navigation'
+
+
+
+
+
 
 
 
 export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = [],departureDate,returnDate}) {
 
+    const params = useParams()
+    
     const link = `http://localhost:3000/joinTravel/${uuid}`
     const copylink = () => {
         navigator.clipboard.writeText(link)
     }
     const router = useRouter()
 
-    const clearPreferences = useUserStore((state) => state.clearPreferences);        
+    const clearPreferences = useUserStore((state) => state.clearPreferences); 
 
     const getDate = (date) => {
         if (!date) return null
@@ -23,26 +33,51 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
         return d.toLocaleDateString('en-GB') // dd/mm/yyyy
     }
 
-    const postData = async () => {
-       if (confirmData === "preferences") {
-            const preferences = useUserStore.getState().travelPrefences;
+    useEffect( () => {
+        if (confirmData === "preferences") {
+            const fetchData = async() => {
+                const travelId = params.slug
+                
+                const {hasPreferences} = await getParticipantStatus(travelId)
+                //se false ha trovato prefenze
+                console.log(hasPreferences);
+                
+                
+            if (!hasPreferences) { //se falso salvo
+                
+                               
+                const preferences = useUserStore.getState().travelPrefences;
             
-            //lo salvo nel db
             
-            const {error} = await createPreference(preferences)
+                const {error} = await createPreference(preferences)
             
-            if (error) {
-                throw Error("Errore nel salvare preferenze db", error)
-            }
+                if (error) {
+                    throw Error("Errore nel salvare preferenze db", error)
+                }
+                setSavedData(true)
 
-            clearPreferences()
-            useUserStore.persist.clearStorage(); //forzo e cancello direttamente la key nel localstorage
+                clearPreferences()
+                useUserStore.persist.clearStorage(); //forzo e cancello direttamente la key nel localstorage
+            
+
+                
+        }
+
+        }
+         
+        fetchData()
+        }
+                
+
+
+    },[])
+
+    const onSubmit = async () => {
             router.push("/dashboard")
-            
-            
+
+        
 
 
-       }
 
     }
 
@@ -105,7 +140,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
                             </div>
                           <div className="mt-20 flex flex-col items-center gap-2">
                           
-                                <Button onClick={postData} > See your Travel dashboard</Button> 
+                                <Button onClick={onSubmit} > See your Travel dashboard</Button> 
 
 
 

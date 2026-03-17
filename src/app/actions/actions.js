@@ -238,21 +238,63 @@ export async function selectTravel(param) {
     
 }
 
+export async function getOrganierQuizStatus(param) {
+    const supabase = await createSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    // Prendo tutti i viaggi creati dall'utente
+    try {
+
+        const { data: travels, error } = await supabase
+            .from("travels")
+            .select()
+            .eq("user_id", user.id)
+        
+        
+             
+        if (travels) {
+            travels.forEach(async (item) => { //ciclo perchè user potrebbe avere più viaggi creati
+                console.log(item);
+                
+                const {data, err} = await supabase
+                .from("participants")
+                .select()
+                .eq("user_id",user.id)
+                .eq("travel_uuid",item.uuid)
+
+                console.log(data);
+                
+            })            
+        }
 
 
+
+
+
+    }
+    catch(err) {
+        console.log(err);
+        
+
+    }
+
+    
+}
 
 export async function getParticipantStatus(travelUuid) {
     try {
         const supabase = await createSupabaseClient();
 
         const { data: { user } } = await supabase.auth.getUser();
+        
 
         const { data, error } = await supabase
             .from("participants")
-            .select("user_id")
+            .select()
             .eq("travel_uuid", travelUuid)
             .eq("user_id", user.id)
             .single();
+            
 
         if (error && error.code !== "PGRST116") { // PGRST116 = no rows found, non è un errore reale
             return { hasPreferences: false, error }
