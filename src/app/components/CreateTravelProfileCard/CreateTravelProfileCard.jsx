@@ -12,6 +12,7 @@ import { useUserStore } from "@/store/useUserStore"
 import { useRouter, useParams } from 'next/navigation'
 
 import { Calendar } from 'primereact/calendar';
+import { userIsLogged } from "@/app/actions/actions"
 
 const calendarPT = {
     root: { className: 'w-full' },
@@ -115,6 +116,8 @@ export default function CreateTravelProfileCard() {
     const departureDate = watch("departure_date")
 
     const onSubmit = async (data) => {
+
+            const {user} = await userIsLogged()
         
         const paces = ["Chill", "Balance", "Active"] // travelPace è indice e devo convertirlo a stringa
         const formattedData = {
@@ -130,7 +133,18 @@ export default function CreateTravelProfileCard() {
 
         const checkStatus = localStorage.getItem("travelPrefences")
         if (checkStatus) {
-            router.push(`/signup/?TravelId=${uuid}`)
+            if (user) {
+                console.log("loggato");
+                
+                router.push(`/joinTravel/${uuid}/confirm`)
+
+                
+            }
+            else {
+                router.push(`/signup/?TravelId=${uuid}`)
+
+            }
+
 
             
         }

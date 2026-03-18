@@ -1,17 +1,27 @@
 "use client"
 
 import { useEffect } from "react"
-import { getOrganierQuizStatus } from "../actions/actions"
+import { getOrganizerQuizStatus } from "../actions/actions"
+import { useRouter } from "next/navigation";
+
 
 
 export default  function Page () {
+
+    const router = useRouter();
+    
 
 
     useEffect(() => {
         const checkOganizerQuiz =  async () => {//controllo se organizer ha inserito quiz
 
-            const {data,error} = await getOrganierQuizStatus()
+            const {pending} = await getOrganizerQuizStatus()
+            console.log(pending);
+            
 
+            if (pending.length > 0) {
+                    router.push(`/joinTravel/${pending[0]}/quiz`)
+            }
 
         }    
 
@@ -25,6 +35,9 @@ export default  function Page () {
 
 
     return (
-        <h1>Dashboard</h1>
+        <>
+            <h1>Dashboard</h1> 
+        
+        </>
     )
 }

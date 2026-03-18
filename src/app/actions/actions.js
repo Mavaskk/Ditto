@@ -27,6 +27,13 @@ export async function addUsername(username) {
     
 }
 
+export async function userIsLogged() {
+        const supabase = await createSupabaseClient()
+        const { data: { user } } = await supabase.auth.getUser()
+
+     return {user}
+}
+
 export async function checkParticipantsNumber(param) {
 
     try {
@@ -238,48 +245,35 @@ export async function selectTravel(param) {
     
 }
 
-export async function getOrganierQuizStatus(param) {
+export async function getOrganizerQuizStatus() {
     const supabase = await createSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     // Prendo tutti i viaggi creati dall'utente
-    try {
+    const { data: travels, error } = await supabase
+        .from("travels")
+        .select("uuid")
+        .eq("user_id", user.id)
 
-        const { data: travels, error } = await supabase
-            .from("travels")
-            .select()
-            .eq("user_id", user.id)
-        
-        
-             
-        if (travels) {
-            travels.forEach(async (item) => { //ciclo perchè user potrebbe avere più viaggi creati
-                console.log(item);
-                
-                const {data, err} = await supabase
+    if (error || !travels.length) return { pending: [] }
+
+    // Per ognuno controllo se esiste già in participants
+    const checks = await Promise.all(
+        travels.map(async (t) => {
+            const { data } = await supabase
                 .from("participants")
-                .select()
-                .eq("user_id",user.id)
-                .eq("travel_uuid",item.uuid)
+                .select("user_id")
+                .eq("travel_uuid", t.uuid)
+                .eq("user_id", user.id)
+                .single()
+            return { travelUuid: t.uuid, hasFilled: !!data }
+        })
+    )
 
-                console.log(data);
-                
-            })            
-        }
-
-
-
-
-
-    }
-    catch(err) {
-        console.log(err);
-        
-
-    }
-
-    
+    const pending = checks.filter(c => !c.hasFilled).map(c => c.travelUuid)
+    return { pending } // array di uuid senza quiz
 }
+
 
 export async function getParticipantStatus(travelUuid) {
     try {

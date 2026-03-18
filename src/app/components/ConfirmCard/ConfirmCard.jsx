@@ -18,6 +18,7 @@ import { useParams } from 'next/navigation'
 export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid, destination, budget, travelPace, vibe = [],departureDate,returnDate}) {
 
     const params = useParams()
+    const [savedData,setSavedData] = useState(false)
     
     const link = `http://localhost:3000/joinTravel/${uuid}`
     const copylink = () => {
@@ -26,6 +27,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
     const router = useRouter()
 
     const clearPreferences = useUserStore((state) => state.clearPreferences); 
+    const preferences = useUserStore.getState().travelPrefences;
 
     const getDate = (date) => {
         if (!date) return null
@@ -35,18 +37,18 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
 
     useEffect( () => {
         if (confirmData === "preferences") {
+            console.log(preferences);
+            
             const fetchData = async() => {
-                const travelId = params.slug
+                const travelId = params.slug || preferences.travel_uuid
                 
                 const {hasPreferences} = await getParticipantStatus(travelId)
                 //se false ha trovato prefenze
-                console.log(hasPreferences);
                 
                 
             if (!hasPreferences) { //se falso salvo
                 
-                               
-                const preferences = useUserStore.getState().travelPrefences;
+                    
             
             
                 const {error} = await createPreference(preferences)
