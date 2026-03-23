@@ -245,6 +245,35 @@ export async function selectTravel(param) {
     
 }
 
+export async function getUserPreference(params) {
+        
+    try {
+        const supabase = await createSupabaseClient();
+
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        console.log(user.id);
+        
+        
+
+        const { data, error } = await supabase
+            .from("participants")
+            .select()
+            .eq("user_id", user.id)
+            
+            console.log(data);
+            
+ 
+
+        return { data, error: null }
+    }
+    catch(err) {
+        console.log(err);
+    }
+
+    
+}
+
 export async function getOrganizerQuizStatus() {
     const supabase = await createSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -255,7 +284,9 @@ export async function getOrganizerQuizStatus() {
         .select("uuid")
         .eq("user_id", user.id)
 
-    if (error || !travels.length) return { pending: [] }
+    
+
+    if (error || !travels.length) return { pending: [], }
 
     // Per ognuno controllo se esiste già in participants
     const checks = await Promise.all(
@@ -299,6 +330,46 @@ export async function getParticipantStatus(travelUuid) {
     catch(err) {
         console.log(err);
     }
+}
+
+export async function getUserData() {
+
+    const supabase = await createSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { travels: [], error: "Not authenticated" }
+
+    // Query parallele: viaggi creati + viaggi dove ha inserito preferenze
+    const [{ data: organizedTravels }, { data: participations }] = await Promise.all([
+        supabase
+            .from("travels")
+            .select("uuid, name, number_of_travelers, status")
+            .eq("user_id", user.id),
+        supabase
+            .from("participants")
+            .select("travel_uuid")
+            .eq("user_id", user.id)
+    ])
+
+    // Risalgo ai dettagli dei viaggi dove ha inserito preferenze
+    const participantUuids = (participations || []).map(p => p.travel_uuid)
+    let participantTravels = []
+    if (participantUuids.length > 0) {
+        const { data } = await supabase
+            .from("travels")
+            .select("uuid, name, number_of_travelers, status")
+            .in("uuid", participantUuids)
+        participantTravels = data || []
+    }
+
+    // Merge e deduplica (organizer che ha già compilato appare in entrambe le liste)
+    const organizedUuids = new Set((organizedTravels || []).map(t => t.uuid))
+    const merged = [
+        ...(organizedTravels || []),
+        ...participantTravels.filter(t => !organizedUuids.has(t.uuid))
+    ]
+
+    
+    return { travels: merged, error: null }
 }
 
 export async function signOut() {
