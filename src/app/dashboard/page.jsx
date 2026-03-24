@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react"
 import { getUserData, getUserPreference } from "../actions/actions"
 import TravelCard from "../components/TravelCard/TravelCard";
+import Image from "next/image";
+import Button from "../components/Button/Button";
+import noResult from "../../assets/no_results.svg"
+
 
 
 
@@ -11,6 +15,7 @@ export default  function Page () {
 
     const [travelList,setTravelList] = useState([])
     const [loading,setLoading] = useState(true)
+    const [empty,setEmpty] = useState(false)
   
     
 
@@ -23,7 +28,7 @@ export default  function Page () {
 
             if (travels.length === 0) {
                 // mostra CTA
-                console.log("Mostro cta");
+                setEmpty(true)
                 
             } else {
                 setTravelList(travels)
@@ -70,13 +75,28 @@ export default  function Page () {
         <>
             <div className="rounded-3xl border border-black/[0.13] bg-white  py-12 mx-5 px-10">
             <h1 className="text-4xl   text-balance font-semibold md:text-5xl ">Travels</h1>
-            <div className="grid mt-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {travelList.map((travel) => (
-                    <TravelCard key={travel.uuid} travel={travel}/>
+            {empty ? (
+                <div className="mt-10 flex flex-col justify-center items-center ">
+                    <Image alt="noTravelsFound" src={noResult} className="w-50"/>
+                    <p className="text-gray-500 mt-2 text-2xl">No travels found</p>
+                    <div className="mt-5 flex flex-row gap-3">
+                                <Button link={"/createTravel"} className="mt-10 " variant="primary">Create travel</Button> 
+                                <Button link={"/joinTravel"} className="mt-10 " variant="secondary">Join travel</Button> 
+                        
+                    </div>
+                </div>
+            ) :
+            
+            (
+                <div className="grid mt-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {travelList.map((travel) => (
+                        <TravelCard key={travel.uuid} travel={travel}/>
 
 
-                ))}                
-            </div>
+                    ))}                
+                </div>                
+            )}
+
 
             </div>
             
