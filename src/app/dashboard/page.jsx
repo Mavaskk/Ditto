@@ -41,15 +41,7 @@ export default  function Page () {
             // Tutti i viaggi da mostrare in lista → travels
             
 
-            // const {pending} = await getOrganizerQuizStatus()
-            // console.log(pending);
-            
 
-            // if (pending.length > 0) {
-            //         router.push(`/joinTravel/${pending[0]}/quiz`)
-            // }
-            // // getQuizData()
-            
 
         }    
 

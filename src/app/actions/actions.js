@@ -274,35 +274,48 @@ export async function getUserPreference(params) {
     
 }
 
-export async function getOrganizerQuizStatus() {
+export async function getUserTravelContext() {
     const supabase = await createSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: "unauthenticated" }
 
-    // Prendo tutti i viaggi creati dall'utente
-    const { data: travels, error } = await supabase
+    // 1. Controllo se utente ha creato un viaggio
+    const { data: travel } = await supabase
         .from("travels")
         .select("uuid")
         .eq("user_id", user.id)
+        .maybeSingle() // null senza errore se non trovato
 
-    
+    if (travel) {
+        // È un organizzatore — controllo se ha già le preferenze
+        const { data: preferences } = await supabase
+            .from("participants")
+            .select()
+            .eq("travel_uuid", travel.uuid)
+            .eq("user_id", user.id)
+            .maybeSingle()
 
-    if (error || !travels.length) return { pending: [], }
+        if (preferences) {
+            return { isOrganizer: true, hasPreferences: true, preferences }
+        } else {
+            // Ha creato il viaggio ma non ha ancora compilato il quiz
+            return { isOrganizer: true, hasPreferences: false, travelUuid: travel.uuid }
+        }
+    }
 
-    // Per ognuno controllo se esiste già in participants
-    const checks = await Promise.all(
-        travels.map(async (t) => {
-            const { data } = await supabase
-                .from("participants")
-                .select("user_id")
-                .eq("travel_uuid", t.uuid)
-                .eq("user_id", user.id)
-                .single()
-            return { travelUuid: t.uuid, hasFilled: !!data }
-        })
-    )
+    // 2. Non ha creato viaggi — controllo se è partecipante invitato
+    const { data: preferences } = await supabase
+        .from("participants")
+        .select()
+        .eq("user_id", user.id)
+        .maybeSingle()
 
-    const pending = checks.filter(c => !c.hasFilled).map(c => c.travelUuid)
-    return { pending } // array di uuid senza quiz
+    if (preferences) {
+        return { isOrganizer: false, hasPreferences: true, preferences }
+    }
+
+    // 3. Nessun viaggio, nessuna preferenza
+    return { isOrganizer: false, hasPreferences: false }
 }
 
 
@@ -330,6 +343,30 @@ export async function getParticipantStatus(travelUuid) {
     catch(err) {
         console.log(err);
     }
+}
+
+
+export async function getTravelData(params) {
+    const supabase = await createSupabaseClient()
+
+    // Prendo tutti i viaggi creati dall'utente
+    try {
+        const { data: travel, error } = await supabase
+                .from("travels")
+                .select()
+                .eq("uuid", params) 
+                .single() 
+        return {travel}      
+    }
+    catch (err){
+        console.error(err);
+        
+    }
+
+    
+
+
+    
 }
 
 export async function getUserData() {
