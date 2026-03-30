@@ -4,7 +4,7 @@ import { useUserStore } from "@/store/useUserStore"
 import toast from "react-hot-toast";
 import { createPreference, getParticipantStatus } from "@/app/actions/actions";
 import { useRouter } from 'next/navigation'
-import { useEffect,use, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation"
 import { useParams } from 'next/navigation'
 
@@ -19,7 +19,8 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
 
     const params = useParams()
     const [savedData,setSavedData] = useState(false)
-    
+    const hasSaved = useRef(false)
+
     const link = `http://localhost:3000/joinTravel/${uuid}`
     const copylink = () => {
         navigator.clipboard.writeText(link)
@@ -37,8 +38,9 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
 
     useEffect( () => {
         if (confirmData === "preferences") {
-            console.log(preferences);
-            
+            if (hasSaved.current) return
+            hasSaved.current = true
+
             const fetchData = async() => {
                 const travelId = params.slug || preferences.travel_uuid
                 

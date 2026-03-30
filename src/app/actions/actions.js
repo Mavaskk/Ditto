@@ -1,5 +1,7 @@
 "use server"
 import { createSupabaseClient } from "@/app/auth/server";
+import { Mistral } from '@mistralai/mistralai';
+
 
 
 export async function addUsername(username) {
@@ -50,7 +52,6 @@ export async function checkParticipantsNumber(param) {
             
             
         }       
-        console.log(participants);
         
         return { errorMessage: null, participants }; 
     }
@@ -69,13 +70,14 @@ export async function checkNumberOfPreferencesByTravelUid(travelUid) {
 
         
         
-        
 
         const { data, error } = await supabase
-            .from("participants")
+            .from("public_participants_info")
             .select()
             .eq("travel_uuid", travelUid)
             
+
+        
             
  
 
@@ -300,7 +302,7 @@ export async function getUserPreference(params) {
     
 }
 
-export async function getUserTravelContext() {
+export async function getUserTravelContext(travelUid) {
     const supabase = await createSupabaseClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return { error: "unauthenticated" }
@@ -310,6 +312,7 @@ export async function getUserTravelContext() {
         .from("travels")
         .select("uuid,number_of_travelers")
         .eq("user_id", user.id)
+        .eq("uuid", travelUid)
         .maybeSingle() // null senza errore se non trovato
         
         
@@ -341,12 +344,37 @@ export async function getUserTravelContext() {
         .eq("user_id", user.id)
         .maybeSingle()
 
+    console.log(preferences);
+    
+
     if (preferences) {
         return { isOrganizer: false, hasPreferences: true, preferences }
     }
 
     // 3. Nessun viaggio, nessuna preferenza
     return { isOrganizer: false, hasPreferences: false }
+}
+
+export async function  getAiSuggestion(params) {
+
+    const apiKey = process.env.MISTRAL_API_KEY;
+
+    const client = new Mistral({apiKey: apiKey});
+
+    const responseFormat = {
+
+    } 
+
+    const chatResponse = await client.chat.complete({
+    model: 'mistral-small-latest',
+    messages: [{role: 'user', content: ''}],
+    responseFormat: responseFormat 
+    
+    });
+    console.log(chatResponse);
+    console.log(chatResponse.choices[0].message);
+
+    
 }
 
 
@@ -381,14 +409,20 @@ export async function getTravelData(params) {
     const supabase = await createSupabaseClient()
 
     // Prendo tutti i viaggi creati dall'utente
+    
     try {
         const { data: travel, error } = await supabase
-                .from("travels")
+                .from("public_travel_info")
                 .select()
                 .eq("uuid", params) 
                 .single() 
-        return {travel}      
-    }
+    
+
+                return {travel : travel}
+
+                
+
+            }
     catch (err){
         console.error(err);
         
@@ -423,8 +457,8 @@ export async function getUserData() {
     let participantTravels = []
     if (participantUuids.length > 0) {
         const { data } = await supabase
-            .from("travels")
-            .select("uuid, name, number_of_travelers, status")
+            .from("public_travel_info")
+            .select("uuid, name, number_of_travelers")
             .in("uuid", participantUuids)
         participantTravels = data || []
     }
