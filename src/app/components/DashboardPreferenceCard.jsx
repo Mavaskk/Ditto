@@ -19,7 +19,7 @@ export default function DashboardPreferenceCard({preferences}) {
 
     return (
         <div className="rounded-3xl border border-black/[0.13] bg-white  py-12 px-2 w-full">
-            <h2 className="text-center text-2xl text-3xl   text-balance font-semibold  ">Your preferences</h2>
+            <h2 className="md:px-5 text-2xl text-3xl   text-balance font-semibold  ">Your preferences</h2>
              <div className="mt-25 flex flex-col gap-2">
                             <div className="flex justify-between md:px-5">                           
                                 <p className="text-gray-500 md:text-lg">Destination</p>

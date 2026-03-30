@@ -63,6 +63,32 @@ export async function checkParticipantsNumber(param) {
 
 }
 
+export async function checkNumberOfPreferencesByTravelUid(travelUid) {
+        try {
+        const supabase = await createSupabaseClient();
+
+        
+        
+        
+
+        const { data, error } = await supabase
+            .from("participants")
+            .select()
+            .eq("travel_uuid", travelUid)
+            
+            
+ 
+
+        return { numberOfPartecipants: data.length, error: null }
+    }
+    catch(err) {
+        console.log(err);
+    }
+
+
+    
+}
+
 export async function createTravel(data) {
     try {
             const supabase  = await createSupabaseClient();
@@ -282,11 +308,14 @@ export async function getUserTravelContext() {
     // 1. Controllo se utente ha creato un viaggio
     const { data: travel } = await supabase
         .from("travels")
-        .select("uuid")
+        .select("uuid,number_of_travelers")
         .eq("user_id", user.id)
         .maybeSingle() // null senza errore se non trovato
+        
+        
 
     if (travel) {
+        const {numberOfPartecipants} = await checkNumberOfPreferencesByTravelUid(travel.uuid) //se organizzatore controllo quante preferenze sono aggiunte
         // È un organizzatore — controllo se ha già le preferenze
         const { data: preferences } = await supabase
             .from("participants")
@@ -295,8 +324,10 @@ export async function getUserTravelContext() {
             .eq("user_id", user.id)
             .maybeSingle()
 
+        
+
         if (preferences) {
-            return { isOrganizer: true, hasPreferences: true, preferences }
+            return { isOrganizer: true, hasPreferences: true, preferences, numberOfPartecipants: numberOfPartecipants, maxParticipantsNumber : travel.number_of_travelers }
         } else {
             // Ha creato il viaggio ma non ha ancora compilato il quiz
             return { isOrganizer: true, hasPreferences: false, travelUuid: travel.uuid }
