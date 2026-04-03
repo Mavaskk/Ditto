@@ -202,7 +202,6 @@ export  async function logIn (user) {
                         password: user.password,
                     })
 
-             console.log(data);
                     
 
             if (error) {
@@ -233,7 +232,6 @@ export async function getUsername(uuid) {
         if (error) {
             return {error: error}
         }        
-        console.log(data);
         
         return {error : null,username : data}
         
@@ -280,7 +278,6 @@ export async function getUserPreference(params) {
 
         const { data: { user } } = await supabase.auth.getUser();
         
-        console.log(user.id);
         
         
 
@@ -289,7 +286,6 @@ export async function getUserPreference(params) {
             .select()
             .eq("user_id", user.id)
             
-            console.log(data);
             
  
 
@@ -344,7 +340,6 @@ export async function getUserTravelContext(travelUid) {
         .eq("user_id", user.id)
         .maybeSingle()
 
-    console.log(preferences);
     
 
     if (preferences) {
@@ -355,28 +350,46 @@ export async function getUserTravelContext(travelUid) {
     return { isOrganizer: false, hasPreferences: false }
 }
 
-export async function  getAiSuggestion(params) {
+export async function createAiSuggestion(params) {
 
+    const { z } = await import('zod');
     const apiKey = process.env.MISTRAL_API_KEY;
+    const client = new Mistral({ apiKey });
 
-    const client = new Mistral({apiKey: apiKey});
-
-    const responseFormat = {
-
-    } 
-
-    const chatResponse = await client.chat.complete({
-    model: 'mistral-small-latest',
-    messages: [{role: 'user', content: ''}],
-    responseFormat: responseFormat 
-    
+    const TravelSuggestion = z.object({
+        destination: z.string().describe("Destinazione suggerita del viaggio"),
+        duration_days: z.number().describe("Durata del viaggio in giorni"),
+        daily_sketch: z.array(z.string()).describe("Scheletro giornaliero del viaggio, un elemento per giorno"),
+        compromise_notes: z.string().describe("Motivazione dei compromessi fatti tra le preferenze"),
+        affinity_score: z.number().min(0).max(10).describe("Punteggio di affinità del viaggio rispetto alle preferenze, da 0 a 10"),
     });
-    console.log(chatResponse);
-    console.log(chatResponse.choices[0].message);
 
+    const chatResponse = await client.chat.parse({
+        model: 'mistral-small-latest',
+        messages: [
+            {
+                role: 'system',
+                content: 'Sei un esperto di viaggi di gruppo. Genera suggerimenti di viaggio strutturati basandoti sulle preferenze fornite.'
+            },
+            {
+                role: 'user',
+                content: `Voglio organizzare una vacanza tra amici e queste sono le nostre preferenze: ${JSON.stringify(params, null, 2)}.
+                Genera un unico viaggio che assecondi il più possibile le preferenze di tutti, trovando compromessi motivati dove necessario.
+                Pensa solo a uno scheletro dei giorni senza entrare nel dettaglio.
+                Assegna un punteggio di affinità da 0 a 10.`
+            }
+        ],
+        responseFormat: TravelSuggestion,
+    });
+
+    console.log(chatResponse.choices[0].message.parsed );
     
+    return { response: chatResponse.choices[0].message.parsed }
 }
 
+export async function insertAiSuggestion(params) {
+    
+}
 
 export async function getParticipantStatus(travelUuid) {
     try {
@@ -404,6 +417,39 @@ export async function getParticipantStatus(travelUuid) {
     }
 }
 
+export async function getPreferencesByTravelUuid(travelUuid) {
+
+    try {
+        const supabase = await createSupabaseClient();
+
+        
+
+        const { data, error } = await supabase
+            .from("participants")
+            .select()
+            .eq("travel_uuid", travelUuid)
+            .select(`
+                destination,
+                budget,
+                travel_pace,
+                vibe,
+                departure_date,
+                return_date`)
+            
+
+        if (error && error.code !== "PGRST116") { // PGRST116 = no rows found, non è un errore reale
+            return { hasPreferences: false, error }
+        }
+        
+        
+        
+        return { preferences: data, error: null }
+    }
+    catch(err) {
+        console.log(err);
+    }
+    
+}
 
 export async function getTravelData(params) {
     const supabase = await createSupabaseClient()

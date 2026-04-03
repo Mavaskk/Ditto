@@ -11,7 +11,6 @@ export default async function page({params}) {
 
         const { slug } = await params
         const {travel} = await getTravelData(slug)
-        console.log(travel);
         
         const suggestion = null
         
@@ -49,7 +48,7 @@ export default async function page({params}) {
                     )}  
 
                 </div>
-                    <AiSuggestionCard isOrganizer={isOrganizer} numberOfPartecipants={numberOfPartecipants} maxParticipantsNumber={maxParticipantsNumber} reccomandation={suggestion}/> 
+                    <AiSuggestionCard travelUuid={slug} isOrganizer={isOrganizer} numberOfPartecipants={numberOfPartecipants} maxParticipantsNumber={maxParticipantsNumber} reccomandation={suggestion}/> 
                     <div>
                     <InviteCard uuid={travel.uuid}/>    
                     </div>                 
