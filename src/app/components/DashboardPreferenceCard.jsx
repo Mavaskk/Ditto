@@ -26,7 +26,7 @@ export default function DashboardPreferenceCard({preferences}) {
                                 <p className="text-2xl md:text-2xl lg:text-3xl">{preferences.destination}</p>
                             </div>
                             <div className="flex justify-between md:px-5">                           
-                                <p className="text-gray-500 md:text-lg">Number of travelers</p>
+                                <p className="text-gray-500 md:text-lg">Budget</p>
                                 <p className="text-2xl md:text-2xl lg:text-3xl">{preferences.budget}</p>
                             </div>
                             <div className="flex justify-between md:px-5">                           

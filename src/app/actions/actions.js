@@ -350,18 +350,22 @@ export async function getUserTravelContext(travelUid) {
     return { isOrganizer: false, hasPreferences: false }
 }
 
-export async function createAiSuggestion(params) {
+export async function createAiSuggestion(params,travelUUid) {
 
     const { z } = await import('zod');
     const apiKey = process.env.MISTRAL_API_KEY;
     const client = new Mistral({ apiKey });
 
     const TravelSuggestion = z.object({
-        destination: z.string().describe("Destinazione suggerita del viaggio"),
-        duration_days: z.number().describe("Durata del viaggio in giorni"),
-        daily_sketch: z.array(z.string()).describe("Scheletro giornaliero del viaggio, un elemento per giorno"),
-        compromise_notes: z.string().describe("Motivazione dei compromessi fatti tra le preferenze"),
-        affinity_score: z.number().min(0).max(10).describe("Punteggio di affinità del viaggio rispetto alle preferenze, da 0 a 10"),
+        destination: z.string().describe("Suggested travel destination"),
+        duration_days: z.number().describe("Trip duration in days"),
+        daily_sketch: z.array(z.string()).describe("Day-by-day sketch of the trip, one entry per day"),
+        compromise_notes: z.string().describe("Explanation of the compromises made between the group's preferences"),
+        affinity_score: z.number().min(0).max(10).describe("Affinity score of the suggested trip compared to the group's preferences, from 0 to 10"),
+        pace: z.string().describe("Overall travel pace of the trip"),
+        duration: z.string().describe("Travel period (e.g. date range or season)"),
+        budget: z.number().min(0).max(2000).describe("Estimated budget per person in euros"),
+        vibe: z.string().describe("Trip vibe, using one or more of these labels: Party, Culture, Relax, Trekking, On the road, Mountain, Sea")
     });
 
     const chatResponse = await client.chat.parse({
@@ -369,26 +373,85 @@ export async function createAiSuggestion(params) {
         messages: [
             {
                 role: 'system',
-                content: 'Sei un esperto di viaggi di gruppo. Genera suggerimenti di viaggio strutturati basandoti sulle preferenze fornite.'
+                content: 'You are a group travel expert. Generate structured travel suggestions based on the preferences provided by the group.'
             },
             {
                 role: 'user',
-                content: `Voglio organizzare una vacanza tra amici e queste sono le nostre preferenze: ${JSON.stringify(params, null, 2)}.
-                Genera un unico viaggio che assecondi il più possibile le preferenze di tutti, trovando compromessi motivati dove necessario.
-                Pensa solo a uno scheletro dei giorni senza entrare nel dettaglio.
-                Assegna un punteggio di affinità da 0 a 10.`
+                content: `I want to plan a trip with friends. Here are everyone's preferences: ${JSON.stringify(params, null, 2)}.
+                Generate a single trip that best satisfies the group's preferences, finding motivated compromises where needed.
+                Provide only a high-level day-by-day sketch without going into detail.
+                Assign an affinity score from 0 to 10.`
             }
         ],
         responseFormat: TravelSuggestion,
     });
 
     console.log(chatResponse.choices[0].message.parsed );
+
+    const {data, error} = await insertAiSuggestion(chatResponse.choices[0].message.parsed,travelUUid)
+
+    console.log(data,error);
+    
+
     
     return { response: chatResponse.choices[0].message.parsed }
+
 }
 
-export async function insertAiSuggestion(params) {
-    
+export async function insertAiSuggestion(params,travelUUid) {
+ 
+    try {
+            const supabase = await createSupabaseClient();
+
+
+
+            const {data, error} = await supabase
+            .from("AI_suggestion")
+            .insert([
+            { destination: params.destination,
+                travel: travelUUid,
+              duration_days: params.duration_days,
+              daily_sketch: params.daily_sketch,
+              compromise_notes: params.compromise_notes,
+              affinity_score: params.affinity_score,
+              pace: params.pace,
+              duration: params.duration,
+              budget: params.budget,
+              vibe: params.vibe
+            }])
+            .single();
+
+        if (error) {
+            return {data: null, error}
+        }
+
+        return {data, error: null}
+
+    }
+    catch(err) {
+        console.log(err);
+
+    }
+}
+
+export async function getAisuggestion(travelUuid) {
+    try {
+        const supabase = await createSupabaseClient();
+        const { data, error } = await supabase
+            .from("AI_suggestion")
+            .eq("travel", travelUuid)
+            .select()
+            .single();
+            
+
+        console.log(data,error);
+        
+
+        return { aiSuggestion : data , error: null }
+    }
+    catch(err) {
+        console.log(err);
+    }
 }
 
 export async function getParticipantStatus(travelUuid) {
@@ -519,6 +582,7 @@ export async function getUserData() {
     
     return { travels: merged, error: null }
 }
+
 
 export async function signOut() {
        try {

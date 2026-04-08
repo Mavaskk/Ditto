@@ -1,4 +1,4 @@
-import { getTravelData,getUserTravelContext } from "@/app/actions/actions";
+import { getAisuggestion, getTravelData,getUserTravelContext } from "@/app/actions/actions";
 import DashboardPreferenceCard from "@/app/components/DashboardPreferenceCard";
 import { redirect } from 'next/navigation'
 import InviteCard from "@/app/components/InviteCard";
@@ -12,7 +12,7 @@ export default async function page({params}) {
         const { slug } = await params
         const {travel} = await getTravelData(slug)
         
-        const suggestion = null
+        const {aiSuggestion} = await getAisuggestion(travel)
         
         
 
@@ -48,7 +48,7 @@ export default async function page({params}) {
                     )}  
 
                 </div>
-                    <AiSuggestionCard travelUuid={slug} isOrganizer={isOrganizer} numberOfPartecipants={numberOfPartecipants} maxParticipantsNumber={maxParticipantsNumber} reccomandation={suggestion}/> 
+                    <AiSuggestionCard travelUuid={slug} isOrganizer={isOrganizer} numberOfPartecipants={numberOfPartecipants} maxParticipantsNumber={maxParticipantsNumber} reccomandation={aiSuggestion}/> 
                     <div>
                     <InviteCard uuid={travel.uuid}/>    
                     </div>                 

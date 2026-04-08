@@ -22,7 +22,7 @@ export default function AiSuggestionCard({reccomandation,numberOfPartecipants,ma
 
         setLoading(true)
 
-        const {response} = await createAiSuggestion(preferences)
+        const {response} = await createAiSuggestion(preferences,travelUuid)
         
         setSuggestion(response)
         setLoading(false)
