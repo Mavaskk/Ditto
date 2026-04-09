@@ -11,8 +11,8 @@ export default async function page({params}) {
 
         const { slug } = await params
         const {travel} = await getTravelData(slug)
-        
         const {aiSuggestion} = await getAisuggestion(travel)
+        
         
         
 
@@ -24,17 +24,6 @@ export default async function page({params}) {
             console.log("No preference found");
             redirect(`/joinTravel/${travelUuid}/quiz`)
         }
-
-
-        
-
-                    
-            
-        
-
-
-
-
 
 
     return(
