@@ -30,17 +30,20 @@ export default async function page({params}) {
         <div className="rounded-3xl border border-black/[0.13] bg-white  py-12 mx-5 px-10 h-fit">
             <h1 className="text-4xl   text-balance font-semibold md:text-5xl ">Dashboard: <span>{travel.name} </span></h1>
             <div className="grid md:grid-cols-3 gap-2 mt-10">
-                <div>
+                <div className="flex flex-col gap-5">
                     {preferences && (
                         <DashboardPreferenceCard preferences={preferences}/>
 
                     )}  
+                    <InviteCard  uuid={travel.uuid}/>    
+
 
                 </div>
+                <div className="md:col-span-2">
                     <AiSuggestionCard travelUuid={slug} isOrganizer={isOrganizer} numberOfPartecipants={numberOfPartecipants} maxParticipantsNumber={maxParticipantsNumber} reccomandation={aiSuggestion}/> 
-                    <div>
-                    <InviteCard uuid={travel.uuid}/>    
-                    </div>                 
+
+                </div>
+              
 
 
             </div>

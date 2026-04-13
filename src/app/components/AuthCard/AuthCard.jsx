@@ -23,7 +23,6 @@ export default function AuthCard({mode}) {
     const {
         register,
         handleSubmit,
-
         formState: { errors }
     } = useForm();
 
