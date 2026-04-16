@@ -17,11 +17,11 @@ export default function AiSuggestionCard({reccomandation,numberOfPartecipants,ma
     const generateSuggestion = async () => {
 
         const {preferences} = await getPreferencesByTravelUuid(travelUuid)
-        console.log(preferences);
         
         setLoading(true)
 
         const {response} = await createAiSuggestion(preferences,travelUuid)
+        
         
         setSuggestion(response)
         setLoading(false)
@@ -34,12 +34,7 @@ export default function AiSuggestionCard({reccomandation,numberOfPartecipants,ma
     },[reccomandation])    
 
 
-    useEffect(() => {
 
-        console.log(suggestion);
-        
-
-    },[suggestion])
 
 
 

@@ -439,13 +439,18 @@ export async function getAisuggestion(travelUuid) {
         console.log(travelUuid);
         
         const supabase = await createSupabaseClient();
-        const { data, error } = await supabase
+        let { data, error } = await supabase
             .from("AI_suggestion")
             .select()
             .eq("travel", travelUuid.uuid)
-            .single()                
+            .select()           
+            
+        
+        const index = data.length - 1
+                
+            
 
-        return { aiSuggestion: data , error: null }
+        return { aiSuggestion: data[index] , error: null }
     }
     catch(err) {
         console.log(err);
