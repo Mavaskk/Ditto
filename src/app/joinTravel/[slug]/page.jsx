@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react"
 import Image from "next/image"
 import { selectTravel, getUsername } from "@/app/actions/actions"
 import joinTravel from "../../../assets/joinTravel.svg"
+import noResult from "../../../assets/no_results.svg"
 import Button from "@/app/components/Button/Button"
 import { checkParticipantsNumber } from "@/app/actions/actions"
 
@@ -16,6 +17,7 @@ export default function Page ({params}) {
     const [username,setUsername] = useState({})
     const [isLoading,setIsLoading] = useState(true)
     const [travelFull,setTravelFull] = useState(false)
+    const [travelNotFound,setTravelNotFound] = useState(false)
 
     useEffect(() => {
 
@@ -23,7 +25,7 @@ export default function Page ({params}) {
             
             const {errorMessage,newTravel} = await selectTravel(slug)
             if (errorMessage) {
-                console.log(errorMessage);
+                setTravelNotFound(true)
                 
             }
             
@@ -58,6 +60,23 @@ export default function Page ({params}) {
 
 
     },[slug])
+
+
+
+    if (travelNotFound) {
+        return (
+            <section className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
+                <Image alt="notFound" src={noResult} className="w-40 mb-6" />
+                <h1 className="text-3xl md:text-4xl font-semibold text-balance">Trip not found</h1>
+                <p className="text-gray-400 text-sm md:text-base mt-2 max-w-sm">
+                    The link you followed doesn&apos;t match any trip. It may be expired or incorrect.
+                </p>
+                <div className="mt-8">
+                    <Button link="/joinTravel" variant="primary">Try with another code</Button>
+                </div>
+            </section>
+        )
+    }
     
 
 

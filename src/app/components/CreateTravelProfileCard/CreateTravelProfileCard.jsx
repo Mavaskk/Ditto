@@ -12,7 +12,8 @@ import { useUserStore } from "@/store/useUserStore"
 import { useRouter, useParams } from 'next/navigation'
 
 import { Calendar } from 'primereact/calendar';
-import { userIsLogged } from "@/app/actions/actions"
+import { userIsLogged, getParticipantStatus } from "@/app/actions/actions"
+import { useEffect, useState } from "react"
 
 const calendarPT = {
     root: { className: 'w-full' },
@@ -93,11 +94,22 @@ export default function CreateTravelProfileCard() {
 
     const addPrefences = useUserStore((state) => state.updatePreferences) //state estrae direttamente la funzione che voglio senza usare {}
     const router = useRouter()
-    
+
     const params = useParams()
     const uuid = params.slug //Estraggo uuid da link
 
-    
+    const [alreadySubmitted, setAlreadySubmitted] = useState(false)
+
+    useEffect(() => {
+        const checkPreferences = async () => {
+            const { user } = await userIsLogged()
+            if (!user) return // non loggato, mostra il form normalmente
+
+            const { hasPreferences } = await getParticipantStatus(uuid)
+            if (hasPreferences) setAlreadySubmitted(true)
+        }
+        checkPreferences()
+    }, [])
     
     const {
             register,
@@ -151,6 +163,18 @@ export default function CreateTravelProfileCard() {
        
     }
 
+
+    if (alreadySubmitted) {
+        return (
+            <Card className="w-full md:w-120 lg:w-150 md:py-16">
+                <div className="flex flex-col items-center gap-3 text-center">
+                    <p className="text-2xl font-semibold">You&apos;re already in!</p>
+                    <p className="text-gray-500">You have already submitted your preferences for this trip.</p>
+                    <Button link="/dashboard" variant="primary" className="mt-4">Go to dashboard</Button>
+                </div>
+            </Card>
+        )
+    }
 
     return (
         <Card className=" w-full  md:w-120 lg:w-150 md:py-16">
