@@ -1,8 +1,7 @@
+import { Suspense } from "react"
 import AuthCard from "../components/AuthCard/AuthCard"
 
 export default function page() {
-
-
 
     return(
         <div className="mx-4" >
@@ -13,12 +12,11 @@ export default function page() {
 
         </section>
         <section className="flex justify-center">
-            <AuthCard mode={"signup"}/>
-
-
-            
+            <Suspense fallback={null}>
+                <AuthCard mode={"signup"}/>
+            </Suspense>
         </section>
-        
+
         </div>
     )
 }
