@@ -66,7 +66,15 @@ export default  function Page () {
         //mappo array viaggio e faccio menu dropdown e in base a viaggio selezionato mostro preferenze e partecipanti
         <>
             <div className="rounded-3xl border border-black/[0.13] bg-white  py-12 mx-5 px-10">
-            <h1 className="text-4xl   text-balance font-semibold md:text-5xl ">Travels</h1>
+            <div className="flex flex-row items-center justify-between">
+                <h1 className="text-4xl text-balance font-semibold md:text-5xl">Travels</h1>
+                {!empty && (
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <Button link={"/joinTravel"} className="!px-4 !py-2 text-sm " variant="secondary">Join travel</Button>
+                        <Button link={"/createTravel"} className="!px-4 !py-2 text-sm" variant="primary">Create travel</Button>
+                    </div>
+                )}
+            </div>
             {empty ? (
                 <div className="mt-10 flex flex-col justify-center items-center ">
                     <Image alt="noTravelsFound" src={noResult} className="w-50"/>

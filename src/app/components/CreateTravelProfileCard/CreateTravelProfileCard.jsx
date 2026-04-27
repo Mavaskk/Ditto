@@ -184,7 +184,7 @@ export default function CreateTravelProfileCard() {
                     </div>
                 </div>
                 <div>
-                <p>2. The vibe (Selezione multipla)</p>
+                <p>2. The vibe</p>
                     <div className="mt-2 flex gap-2">
                         <Controller
                         name="vibe"

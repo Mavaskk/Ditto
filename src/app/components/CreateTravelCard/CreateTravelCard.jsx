@@ -29,7 +29,6 @@ export default function CreateTravelCard() {
             if (result && result.errorMessage) {
                 console.log("Errore:", result.errorMessage);
             } else {
-                console.log(travelUuid);
                 router.push(`createTravel/confirm/${travelUuid}`)
 
             }
@@ -50,7 +49,7 @@ export default function CreateTravelCard() {
                     </div>
 
                     <div className="flex justify-center mt-15">
-                        <Button type={"submit"}  className=" text-center w-fit" variant="primary">Creare & invite freinds</Button> 
+                        <Button type={"submit"}  className=" text-center w-fit" variant="primary">Create & invite friends</Button> 
 
                     </div>
 

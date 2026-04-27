@@ -7,14 +7,12 @@ import { userIsLogged } from "./app/actions/actions";
 export async function proxy(request) {
 
   const redirectUrl = new URL("/login",request.url);
-  const protectedUrl = request.nextUrl.pathname.startsWith("/dashboard");
+  const protectedUrl = request.nextUrl.pathname.startsWith("/dashboard") ||
+                       request.nextUrl.pathname.startsWith("/createTravel");
   console.log(protectedUrl);
   
   const {user} = await userIsLogged();
-
-  console.log(user);
   
-
   
   if (protectedUrl && !user) {
       
