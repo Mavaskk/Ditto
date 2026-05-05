@@ -21,7 +21,7 @@ export default function ConfimCard ({confirmData,numberTravelers,travelName,uuid
     const [savedData,setSavedData] = useState(false)
     const hasSaved = useRef(false)
 
-    const link = `http://localhost:3000/joinTravel/${uuid}`
+    const link = `https://ditto-beryl.vercel.app/joinTravel/${uuid}`
     const copylink = () => {
         navigator.clipboard.writeText(link)
     }

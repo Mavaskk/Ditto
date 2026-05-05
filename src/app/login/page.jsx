@@ -12,7 +12,7 @@ export default function page() {
 
         </section>
         <section className="flex justify-center">
-            <Suspense fallback={null}>
+            <Suspense fallback={null}> 
                 <AuthCard mode={"login"}/>
             </Suspense>
         </section>

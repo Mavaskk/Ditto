@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 export default function InviteCard({uuid}) {
 
-    const link = `http://localhost:3000/joinTravel/${uuid}`
+    const link = `https://ditto-beryl.vercel.app/joinTravel/${uuid}`
     const copylink = () => {
         navigator.clipboard.writeText(link)
     }
