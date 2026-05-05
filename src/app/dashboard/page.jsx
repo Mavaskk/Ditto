@@ -36,20 +36,8 @@ export default  function Page () {
             }
             setLoading(false)
 
-
-
-            // Tutti i viaggi da mostrare in lista → travels
-            
-
-
-
         }    
-
-        
-
         checkOganizerQuiz()
-
-
     },[])
 
 

@@ -42,14 +42,20 @@ export default function AiSuggestionCard({reccomandation,numberOfPartecipants,ma
         <div className="rounded-3xl border md:px-8 border-black/[0.13] bg-white py-10 px-5 h-full w-full">
 
             <div className="relative">
-                <h2 className="text-3xl md:text-4xl font-semibold">Ai suggestion</h2>
+                <div className="flex flex-col gap-2 md:flex-row justify-between">                    
+                        <h2 className="text-3xl md:text-4xl font-semibold">Ai suggestion</h2>
+                    
+                        {suggestion && <div className="w-fit bg-[#ECFDB9] text-[#375D06] text-sm font-medium px-3 py-2 rounded-full">
+                            Affinity: {suggestion.affinity_score}/10
+                        </div>}
+                </div>
 
                 {suggestion ? (
                     <div>
-                        {/* Affinity badge */}
+                        {/* Affinity badge
                         <div className="absolute top-0 right-0 bg-[#ECFDB9] text-[#375D06] text-sm font-medium px-3 py-2 rounded-full">
                             Affinity: {suggestion.affinity_score}/10
-                        </div>
+                        </div> */}
 
                         {/* Info grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-12 mt-8">
