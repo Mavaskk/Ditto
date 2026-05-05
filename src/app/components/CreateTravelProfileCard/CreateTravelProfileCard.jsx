@@ -269,7 +269,7 @@ export default function CreateTravelProfileCard() {
                 </div>
                 <div>
                     <p className="mb-2">4. Duration</p>
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 flex-col md:flex-row">
                         <div className="flex flex-col gap-1 flex-1">
                             <label className="text-[#375D06] md:text-lg">Departure</label>
                             <Controller
